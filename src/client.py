@@ -33,7 +33,10 @@ class WebSearchClient:
         self.api_key = api_key or os.getenv("OPENAI_API_KEY")
         
         if not self.api_key:
-            raise ValueError("API key must be provided or set in OPENAI_API_KEY environment variable")
+            raise ValueError(
+                "API key must be provided or set in "
+                "OPENAI_API_KEY environment variable"
+            )
         
         self.client = OpenAI(api_key=self.api_key)
     

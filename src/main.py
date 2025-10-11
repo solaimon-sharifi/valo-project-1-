@@ -129,7 +129,10 @@ def main() -> int:
         
         # Parse command line arguments
         args = parse_arguments()
-        logger.debug(f"Parsed arguments: query='{args.query}', model={args.model}, domains={args.domains}")
+        logger.debug(
+            f"Parsed arguments: query='{args.query}', "
+            f"model={args.model}, domains={args.domains}"
+        )
         
         # Verbose logging
         if args.verbose:  # pragma: no cover

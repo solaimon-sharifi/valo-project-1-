@@ -104,7 +104,9 @@ class TestWebSearchClient:
         assert tools[0]["type"] == "web_search"
     
     @patch('src.client.OpenAI')
-    def test_search_handles_authentication_error(self, mock_openai_class, test_api_key, sample_query):
+    def test_search_handles_authentication_error(
+        self, mock_openai_class, test_api_key, sample_query
+    ):
         """Test handling authentication errors."""
         mock_client_instance = MagicMock()
         mock_client_instance.responses.create.side_effect = AuthenticationError(

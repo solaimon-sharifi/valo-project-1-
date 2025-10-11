@@ -120,7 +120,9 @@ class TestSearchService:
     
     @patch('src.search_service.WebSearchClient')
     @patch('src.search_service.ResponseParser')
-    def test_search_handles_client_error(self, mock_parser_class, mock_client_class, test_api_key, sample_query):
+    def test_search_handles_client_error(
+        self, mock_parser_class, mock_client_class, test_api_key, sample_query
+    ):
         """Test that service properly handles client errors."""
         mock_client = MagicMock()
         mock_client.search.side_effect = SearchError(

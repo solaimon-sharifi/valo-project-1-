@@ -120,8 +120,12 @@ def setup_logging(
         if json_format:
             file_handler.setFormatter(JSONFormatter())
         else:
+            format_str = (
+                '%(asctime)s - %(name)s - %(levelname)s - '
+                '%(module)s:%(funcName)s:%(lineno)d - %(message)s'
+            )
             file_format = logging.Formatter(
-                '%(asctime)s - %(name)s - %(levelname)s - %(module)s:%(funcName)s:%(lineno)d - %(message)s',
+                format_str,
                 datefmt='%Y-%m-%d %H:%M:%S'
             )
             file_handler.setFormatter(file_format)
