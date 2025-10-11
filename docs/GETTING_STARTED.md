@@ -157,7 +157,8 @@ This is **exactly** how professional development teams start projects.
 ## Next Steps
 
 ### Path 1: Understand the Code (Recommended)
-📖 **[Read: Code as Textbook Guide](CODE_AS_TEXTBOOK.md)**
+� First, visit the **[Learning Path Map](LEARNING_PATH.md)** to see how onboarding, labs, and the project studio interlock.
+�📖 **[Read: Code as Textbook Guide](CODE_AS_TEXTBOOK.md)**
 - Learn how to read code with narrative comments
 - Choose your learning path (beginner/intermediate/advanced)
 - Understand the chapter structure

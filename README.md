@@ -32,9 +32,9 @@ Build a creative AI application using **OpenAI's APIs** while mastering:
 <td width="33%" align="center">
 <h3>📚 Teach Me Properly</h3>
 <p><strong>Full learning path</strong></p>
-<a href="docs/CODE_AS_TEXTBOOK.md">Code as Textbook →</a>
+<a href="docs/LEARNING_PATH.md">Learning Path Map →</a>
 <br><br>
-<em>Read code like a story</em>
+<em>Follow the guided journey</em>
 </td>
 <td width="33%" align="center">
 <h3>🎯 I Know What I'm Doing</h3>
@@ -51,9 +51,11 @@ Build a creative AI application using **OpenAI's APIs** while mastering:
 ## 📖 Your Learning Resources
 
 ### 🎓 Course Materials
+- **[Learning Path Map](docs/LEARNING_PATH.md)** - Master roadmap
 - **[Getting Started](docs/GETTING_STARTED.md)** - Setup and first steps
 - **[Course Structure](docs/COURSE_STRUCTURE.md)** - 2-week session plan
 - **[Code as Textbook](docs/CODE_AS_TEXTBOOK.md)** - How to read this code
+- **[Student Guide](docs/STUDENT_GUIDE.md)** - Day-by-day checklist
 - **[Grading Rubric](docs/GRADING.md)** - What you'll be evaluated on
 
 ### 🛠️ Development Guides
@@ -61,10 +63,17 @@ Build a creative AI application using **OpenAI's APIs** while mastering:
 - **[AI Collaboration](docs/AI_COLLABORATION.md)** - Work with Claude (10 min read)
 - **[Git Workflow](docs/GIT_WORKFLOW.md)** - Professional commits (10 min read)
 - **[Logging Guide](docs/LOGGING.md)** - Enterprise logging (5 min read)
+- **[Labs (Guided Practice)](docs/LEARNING_PATH.md#2-narrative-reading-days-12)** - Hands-on exercises per chapter
 
 ### 💡 Project Resources
+- **[Project Launch Kit](docs/PROJECT_LAUNCH_KIT.md)** - Scope and planning template
 - **[Project Ideas](docs/PROJECT_IDEAS.md)** - 60+ ideas with difficulty ratings
 - **[OpenAI APIs](docs/openai_tools_research_oct2025.md)** - Complete API reference (1,300 lines)
+- **[Demo Playbook](docs/DEMO_PLAYBOOK.md)** - Prepare your final presentation
+
+### 📚 Reference Library
+- **[Architecture Overview](docs/architecture.md)** - System diagrams and design decisions
+- **[OpenAI Web Search Notes](docs/web_search_openai.md)** - Tool behavior, payloads, and examples
 
 ---
 

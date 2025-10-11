@@ -8,6 +8,8 @@
 
 ## Overview
 
+> Use the [Learning Path Map](LEARNING_PATH.md) alongside this schedule to track labs, milestones, and reflections.
+
 ### Week 1: Learn by Reading Production Code
 Understand how professional software is structured, tested, and documented.
 

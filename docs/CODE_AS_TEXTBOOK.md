@@ -4,6 +4,8 @@
 
 Welcome to a unique learning experience. This isn't just code with comments - it's a **story told through code**. Each file is a chapter, each function is a scene, and each concept is explained as if we're sitting together, building this application from scratch.
 
+👉 Start with the **[Learning Path Map](LEARNING_PATH.md)** to see where each chapter, lab, and practice loop fits.
+
 ---
 
 ## 📚 Table of Contents: Your Reading Order
@@ -22,7 +24,8 @@ Welcome to a unique learning experience. This isn't just code with comments - it
 - ✓ The power of `@property` for computed attributes
 - ✓ Creating custom exceptions for better error handling
 
-**Start Here If:** You've never used dataclasses or want to understand the data flow
+**Start Here If:** You've never used dataclasses or want to understand the data flow  
+**Lab:** [`LAB_01_MODELS`](labs/LAB_01_MODELS.md)
 
 ---
 
@@ -41,7 +44,8 @@ Welcome to a unique learning experience. This isn't just code with comments - it
 - ✓ Building request payloads programmatically
 - ✓ Defensive programming patterns
 
-**Start Here If:** You want to learn how to integrate third-party APIs
+**Start Here If:** You want to learn how to integrate third-party APIs  
+**Lab:** [`LAB_02_CLIENT`](labs/LAB_02_CLIENT.md)
 
 ---
 
@@ -57,7 +61,8 @@ Welcome to a unique learning experience. This isn't just code with comments - it
 - ✓ Formatting output for human consumption
 - ✓ Handling optional vs required fields
 
-**Start Here If:** You struggle with parsing JSON or want to master data transformation
+**Start Here If:** You struggle with parsing JSON or want to master data transformation  
+**Lab:** [`LAB_03_PARSER`](labs/LAB_03_PARSER.md)
 
 ---
 
@@ -76,7 +81,8 @@ Welcome to a unique learning experience. This isn't just code with comments - it
 - ✓ Managing dependencies without global state
 - ✓ Building a clean public API
 
-**Start Here If:** You want to understand application architecture patterns
+**Start Here If:** You want to understand application architecture patterns  
+**Lab:** [`LAB_04_SERVICE`](labs/LAB_04_SERVICE.md)
 
 ---
 
@@ -92,7 +98,8 @@ Welcome to a unique learning experience. This isn't just code with comments - it
 - ✓ Application lifecycle and cleanup
 - ✓ Logging for troubleshooting
 
-**Start Here If:** You want to build user-facing applications
+**Start Here If:** You want to build user-facing applications  
+**Lab:** [`LAB_05_MAIN`](labs/LAB_05_MAIN.md)
 
 ---
 
@@ -111,7 +118,8 @@ Welcome to a unique learning experience. This isn't just code with comments - it
 - ✓ Multiple handlers (console + file)
 - ✓ Performance: when NOT to log
 
-**Start Here If:** You want to build production-ready systems
+**Start Here If:** You want to build production-ready systems  
+**Lab:** [`LAB_06_LOGGING`](labs/LAB_06_LOGGING.md)
 
 ---
 
