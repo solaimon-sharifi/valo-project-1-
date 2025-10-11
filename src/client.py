@@ -1,51 +1,193 @@
 """
-OpenAI API client for web search operations.
+📖 CHAPTER 2: THE MESSENGER - OpenAI API Client
+================================================
 
-This module handles direct interaction with the OpenAI Responses API.
+STORY: Talking to the AI
+-------------------------
+In Chapter 1, we created blueprints (data models). Now we need someone to actually
+TALK to OpenAI's servers. That's what this Client does - it's like a messenger who:
+
+1. Takes our request (a search query)
+2. Packages it in the format OpenAI expects (JSON payload)
+3. Sends it over the internet (HTTP POST)
+4. Waits for the response
+5. Brings back the raw data
+
+Think of it like ordering food delivery:
+- You (main.py) → tell the messenger what you want
+- Messenger (client.py) → calls the restaurant (OpenAI API)
+- Restaurant → prepares food (runs AI model)
+- Messenger → brings back your order (API response)
+
+LEARNING OBJECTIVES:
+-------------------
+✓ Understand API clients and HTTP requests
+✓ Learn environment variable management (.env files)
+✓ Master error handling and retries
+✓ See defensive programming (validate inputs)
+✓ Appreciate separation of concerns (Client = communication ONLY)
 """
 
 import os
 from typing import Optional, Dict, Any
 
+# OpenAI's official Python library - handles HTTPS, auth, retries
 from openai import OpenAI, AuthenticationError, RateLimitError, APIError
+
+# Load environment variables from .env file (keeps secrets out of code)
 from dotenv import load_dotenv
 
+# Our data models from Chapter 1
 from src.models import SearchOptions, SearchError
 
 
-# Load environment variables
+# ============================================================================
+# INITIALIZATION: Load secrets before any class code runs
+# ============================================================================
+# 📝 CONCEPT: Why load_dotenv() here?
+# ------------------------------------
+# This runs when the module is IMPORTED (before any functions are called).
+# It loads variables from .env file into os.environ, so this code:
+#   api_key = os.getenv("OPENAI_API_KEY")
+# ...can find the key without us having to remember to load it.
+#
+# 💡 SECURITY: Why use .env files?
+# --------------------------------
+# ❌ NEVER: api_key = "sk-abc123..."  # Hardcoded in source code
+# ✅ ALWAYS: api_key = os.getenv("OPENAI_API_KEY")  # From environment
+#
+# If you commit hardcoded keys to git, they're public forever (even if deleted).
 load_dotenv()
 
 
+# ============================================================================
+# THE CLIENT CLASS: Our Messenger to OpenAI
+# ============================================================================
+
 class WebSearchClient:
-    """Client for interacting with OpenAI's web search API."""
+    """
+    Client for interacting with OpenAI's web search API.
+    
+    📚 CONCEPT: The Client Pattern
+    -------------------------------
+    A "client" in software is code that talks to a server/service. Think of it
+    like a restaurant:
+    - You → tell the waiter what you want (user code)
+    - Waiter → tells the kitchen (client)
+    - Kitchen → prepares food (OpenAI's servers)
+    - Waiter → brings food back (client returns response)
+    
+    This class ONLY handles communication. It doesn't:
+    - ❌ Validate business logic (that's the service layer)
+    - ❌ Parse responses (that's the parser)
+    - ❌ Present to users (that's the main app)
+    
+    It DOES:
+    - ✓ Manage authentication
+    - ✓ Build HTTP requests  
+    - ✓ Handle network errors
+    - ✓ Translate API errors into our domain errors
+    
+    📝 DESIGN DECISION: Why a Class?
+    ---------------------------------
+    We could have used functions:
+    
+    def search(api_key: str, query: str) -> dict:
+        ...
+    
+    But a class is better because:
+    1. State management (api_key stored once, not passed everywhere)
+    2. Multiple related methods (search, validate, construct_payload)
+    3. Easy to mock in tests
+    4. Follows industry patterns (easier for others to understand)
+    """
     
     def __init__(self, api_key: Optional[str] = None):
         """
         Initialize the web search client.
         
-        Args:
-            api_key: OpenAI API key. If None, will load from environment.
-            
-        Raises:
-            ValueError: If no API key is provided
-        """
+        📚 CONCEPT: Dependency Injection
+        --------------------------------
+        This pattern is called "dependency injection." You can provide the API
+        key explicitly OR let it load from environment. This makes code:
+        - Flexible: Works in multiple environments (dev, test, prod)
+        - Testable: Can inject a fake key in tests
+        - Secure: Doesn't require hardcoded secrets
+        
+        EXAMPLE USAGE:
+        >>> # Option 1: Explicit key (for testing)
+        >>> client = WebSearchClient(api_key="sk-test-123")
+        >>> 
+        >>> # Option 2: From environment (for production)
+        >>> # Assumes .env has OPENAI_API_KEY=sk-abc...
+        >>> client = WebSearchClient()
+        
+        💡 PATTERN: The "or" Operator
+        ------------------------------
         self.api_key = api_key or os.getenv("OPENAI_API_KEY")
         
+        How this works:
+        - If api_key is provided and truthy → use it
+        - If api_key is None or empty → check os.getenv()
+        - If both fail → self.api_key = None (caught below)
+        
+        Args:
+            api_key: OpenAI API key. If None, will load from OPENAI_API_KEY
+                    environment variable.
+            
+        Raises:
+            ValueError: If no API key is provided or found
+        """
+        # Try explicit key first, fall back to environment
+        self.api_key = api_key or os.getenv("OPENAI_API_KEY")
+        
+        # Fail fast if no key available
+        # 📝 PATTERN: Fail Fast
+        # Rather than waiting until we make a request (wasting time), we check
+        # immediately. This gives users a clear error message at startup.
         if not self.api_key:
             raise ValueError(
                 "API key must be provided or set in "
                 "OPENAI_API_KEY environment variable"
             )
         
+        # Create the official OpenAI client
+        # This handles HTTPS, retries, timeouts automatically
         self.client = OpenAI(api_key=self.api_key)
     
     def validate_api_key(self) -> bool:
         """
         Validate that the API key is in the correct format.
         
+        📚 CONCEPT: Client-Side Validation
+        -----------------------------------
+        We check the key FORMAT before making API calls. This catches:
+        - Typos in .env file (forgot "sk-" prefix)
+        - Truncated keys (copy-paste errors)
+        - Wrong type of keys (using project ID instead)
+        
+        Why not just try to use it?
+        - API calls cost money (even failed ones may count)
+        - Better error messages (tell user WHAT is wrong)
+        - Faster feedback (no network roundtrip)
+        
+        💡 OpenAI Key Format:
+        ---------------------
+        All OpenAI API keys:
+        - Start with "sk-" (secret key)
+        - Are around 48-50 characters long
+        - Contain alphanumeric characters
+        
+        EXAMPLE USAGE:
+        >>> client = WebSearchClient(api_key="invalid")
+        >>> if not client.validate_api_key():
+        ...     print("Key looks wrong - check your .env file!")
+        
         Returns:
-            True if key format is valid
+            True if key appears valid, False otherwise
+            
+        ⚠️ NOTE: This only checks FORMAT, not if the key actually works.
+                 A well-formatted key might still be expired/revoked.
         """
         return self.api_key.startswith("sk-") and len(self.api_key) > 20
     

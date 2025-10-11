@@ -94,7 +94,56 @@ python -m src.main "AI news today"
 
 ---
 
-## 📚 Learning Path (Read in Order)
+## � Code as Textbook: Learn by Reading
+
+**This codebase is designed as a living textbook.** Every file is heavily commented with explanations, examples, and design decisions. Instead of just showing you WHAT the code does, the comments explain WHY and teach you the underlying concepts.
+
+### 🎓 Start Here: [Code as Textbook Guide](docs/CODE_AS_TEXTBOOK.md)
+
+This guide provides:
+- **📚 Chapter-by-chapter reading order** (each source file is a chapter)
+- **🎯 Multiple learning paths** based on your experience level
+- **💡 Concept explanations** woven into the code comments
+- **🔍 Cross-references** between related concepts
+- **📖 Story-based narrative** that makes code feel like a book
+
+**Reading Paths Available:**
+1. **"I'm New to Python"** - Learn Python through a real project
+2. **"Teach Me Architecture"** - Understand application structure
+3. **"Master Testing"** - Deep dive into TDD
+4. **"Full Story"** - Read cover-to-cover like a textbook
+
+**Example of what you'll find in the code:**
+```python
+# From src/models.py:
+"""
+📖 CHAPTER 1: THE FOUNDATION - DATA MODELS
+
+STORY: Building Blocks of Our Application
+------------------------------------------
+Imagine you're building a house. Before you start construction, 
+you need blueprints. In software, these blueprints are called 
+"data models"...
+
+LEARNING OBJECTIVES:
+✓ Understand Python dataclasses
+✓ Learn type hints for better documentation
+✓ Master properties (computed attributes)
+...
+"""
+```
+
+Each file teaches you:
+- **What** the code does (functionality)
+- **Why** it's written this way (design decisions)  
+- **How** to use it (examples)
+- **Alternatives** we didn't choose (and why)
+
+💡 **This is unique:** Most codebases have minimal comments. We've turned ours into a narrative textbook where each chapter builds on the last, teaching you professional software engineering through storytelling.
+
+---
+
+## �📚 Learning Path (Read in Order)
 
 ### 🎓 Week 1: Foundation
 
