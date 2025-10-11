@@ -122,11 +122,13 @@ Build a creative AI application using **OpenAI's APIs** while mastering:
 - 📚 Document Q&A (Embeddings + Chat)
 - 🎬 Story to video (Chat + Sora 2)
 
-**[Browse all project ideas →](docs/PROJECT_IDEAS.md)**
+**[Browse 10 detailed project ideas →](docs/PROJECT_IDEAS.md)**
 
 ---
 
 ## ⚡ Quick Start (5 Minutes)
+
+**Prerequisites:** Python 3.11 or higher ([Download](https://python.org))
 
 ```bash
 # Clone and setup

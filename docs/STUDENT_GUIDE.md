@@ -14,7 +14,8 @@
 - Session 3: Keep Building (TDD)
 - Session 4: Polish + Prep Demo
 
-**Week 3: Demo Day** 🎤
+**Week 3: Demo Presentations** 🎤
+_Students present their projects. Work quietly on polish/fixes while waiting for your demo slot._
 
 ---
 

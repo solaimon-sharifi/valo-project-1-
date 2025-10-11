@@ -2,6 +2,8 @@
 
 **⏱️ 10 min read | Pick your project**
 
+**This document provides 10 detailed project ideas** with complete specifications, starter templates, and difficulty ratings. For additional inspiration and API examples, see the comprehensive research document.
+
 ---
 
 ## 📖 Before You Start: Know Your Tools
@@ -13,7 +15,7 @@ This document covers all available OpenAI APIs including:
 - **Latest Tools:** GPT-5 Pro, Sora 2, AgentKit, o4-mini, gpt-realtime mini
 - **Core APIs:** Chat Completion, Vision, DALL-E 3, Whisper, TTS, Embeddings
 - **Specialized:** Assistants API, Function Calling, Moderation API
-- **60+ Detailed Project Ideas** by API type
+- **Additional Project Inspiration** by API type
 - **Code Examples** and best practices for each API
 
 **Quick API Reference:**

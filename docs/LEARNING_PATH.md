@@ -2,6 +2,8 @@
 
 **Purpose:** Give you a single map from first clone to polished demo. Bookmark this page and check off milestones as you go.
 
+**Timeline:** 2 weeks of active work + Week 3 for demo presentations
+
 ---
 
 ## 1. Orientation (Day 0)
@@ -89,8 +91,13 @@ Polish, rehearse, and align with grading rubric.
 
 ---
 
-## 6. Ongoing Growth
-After demo day, use the reference project as a playground for advanced topics:
+## 6. Week 3: Demo Presentations
+Present your project professionally in your assigned demo slot. While waiting for your turn or after presenting, work quietly on final polish, bug fixes, or documentation improvements. Be respectful of presenters.
+
+---
+
+## 7. Ongoing Growth
+After demo presentations, use the reference project as a playground for advanced topics:
 - Implement caching or persistence layer.
 - Integrate structured logging with a real collector (ELK, Datadog).
 - Add CI pipeline mirroring the course tests.

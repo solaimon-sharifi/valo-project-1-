@@ -1,6 +1,6 @@
 # 📅 Course Structure: Your 2-Week Journey
 
-**Total Time:** 4 sessions (90 min each) + demo day  
+**Total Time:** 2 weeks (4 sessions, 90 min each) + Week 3 demo presentations  
 **Format:** Hands-on, project-based learning  
 **Outcome:** Working AI application + professional development skills
 
@@ -16,8 +16,8 @@ Understand how professional software is structured, tested, and documented.
 ### Week 2: Build Your Own Application
 Apply patterns from Week 1 to create your unique AI project.
 
-### Week 3: Demo Day
-Present your work professionally.
+### Week 3: Demo Presentations
+Present your work professionally. Students present in assigned slots while working quietly on final polish between presentations.
 
 ---
 
@@ -47,13 +47,15 @@ python -m src.main "Python tutorials" --model gpt-4o
 - What happens with `--verbose`?
 - How are sources cited?
 
-#### Part 2: Read Code as Narrative (45 min)
+#### Part 2: Read Code as Narrative (45 min in-class, continue at home)
 
 **Do This:**
 1. Open `src/models.py`
 2. Read it like a textbook chapter
 3. Try the examples in Python REPL
 4. Ask yourself: "Why did they do it this way?"
+
+_Note: If you need more time to fully understand the patterns, that's normal! Continue exploration at home._
 
 **Example Interactive Reading:**
 ```bash
