@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Web Search - Enterprise Demo</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🔍 AI Web Search</h1>
+            <p class="subtitle">Powered by OpenAI - Enterprise Demo</p>
+            <div style="margin-top: 15px;">
+                <a href="/spectator-ghost" style="color: #10a37f; text-decoration: none; font-weight: 600; border: 2px solid #10a37f; padding: 10px 20px; border-radius: 8px; display: inline-block; transition: all 0.3s;">
+                    🎮 View AI Spectator Ghost Concept →
+                </a>
+            </div>
+        </header>
+
+        <main>
+            <div class="search-box">
+                <form id="searchForm">
+                    <div class="input-group">
+                        <input 
+                            type="text" 
+                            id="query" 
+                            name="query" 
+                            placeholder="Ask me anything... (e.g., 'What are the latest trends in AI?')"
+                            autocomplete="off"
+                            required
+                        >
+                        <button type="submit" id="searchBtn">
+                            <span class="btn-text">Search</span>
+                            <span class="btn-loading" style="display: none;">Searching...</span>
+                        </button>
+                    </div>
+                    
+                    <div class="advanced-options">
+                        <label for="domains">
+                            <span class="label-text">Domain Filter (optional):</span>
+                            <input 
+                                type="text" 
+                                id="domains" 
+                                name="domains" 
+                                placeholder="e.g., wikipedia.org, github.com"
+                                autocomplete="off"
+                            >
+                            <small>Separate multiple domains with commas</small>
+                        </label>
+                    </div>
+                </form>
+            </div>
+
+            <div id="error" class="error-message" style="display: none;"></div>
+
+            <div id="results" class="results-container" style="display: none;">
+                <div class="result-header">
+                    <h2>Search Results</h2>
+                    <div class="result-meta">
+                        <span id="queryDisplay"></span>
+                        <span id="citationCount" class="citation-badge"></span>
+                    </div>
+                </div>
+
+                <div class="answer-box">
+                    <h3>Answer</h3>
+                    <div id="answer" class="answer-content"></div>
+                </div>
+
+                <div id="citationsContainer" class="citations-box" style="display: none;">
+                    <h3>Sources & Citations</h3>
+                    <div id="citations" class="citations-list"></div>
+                </div>
+            </div>
+
+            <div class="examples">
+                <h3>Try these example queries:</h3>
+                <div class="example-buttons">
+                    <button class="example-btn" data-query="What are the latest developments in artificial intelligence?">Latest AI Developments</button>
+                    <button class="example-btn" data-query="How does machine learning work?">How ML Works</button>
+                    <button class="example-btn" data-query="What is quantum computing?">Quantum Computing</button>
+                    <button class="example-btn" data-query="Best practices for software development">Software Best Practices</button>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <p>Built with <a href="https://openai.com" target="_blank">OpenAI</a> • Enterprise AI Demo 2025</p>
+        </footer>
+    </div>
+
+    <script>
+        const searchForm = document.getElementById('searchForm');
+        const queryInput = document.getElementById('query');
+        const domainsInput = document.getElementById('domains');
+        const searchBtn = document.getElementById('searchBtn');
+        const btnText = document.querySelector('.btn-text');
+        const btnLoading = document.querySelector('.btn-loading');
+        const resultsDiv = document.getElementById('results');
+        const errorDiv = document.getElementById('error');
+        const answerDiv = document.getElementById('answer');
+        const citationsDiv = document.getElementById('citations');
+        const citationsContainer = document.getElementById('citationsContainer');
+        const queryDisplay = document.getElementById('queryDisplay');
+        const citationCount = document.getElementById('citationCount');
+
+        // Handle form submission
+        searchForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            await performSearch();
+        });
+
+        // Handle example buttons
+        document.querySelectorAll('.example-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                queryInput.value = btn.dataset.query;
+                performSearch();
+            });
+        });
+
+        async function performSearch() {
+            const query = queryInput.value.trim();
+            const domains = domainsInput.value.trim();
+
+            if (!query) {
+                showError('Please enter a search query');
+                return;
+            }
+
+            // Show loading state
+            setLoading(true);
+            hideError();
+            hideResults();
+
+            try {
+                const response = await fetch('/search', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ query, domains })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    displayResults(data);
+                } else {
+                    showError(data.error || 'An error occurred');
+                }
+            } catch (error) {
+                showError('Network error. Please check your connection and try again.');
+                console.error('Search error:', error);
+            } finally {
+                setLoading(false);
+            }
+        }
+
+        function displayResults(data) {
+            // Display query
+            queryDisplay.textContent = `Query: "${data.query}"`;
+            
+            // Display citation count
+            citationCount.textContent = `${data.citation_count} ${data.citation_count === 1 ? 'source' : 'sources'}`;
+            citationCount.style.display = data.citation_count > 0 ? 'inline-block' : 'none';
+
+            // Display answer with preserved formatting
+            answerDiv.innerHTML = formatAnswer(data.answer);
+
+            // Display citations
+            if (data.citations && data.citations.length > 0) {
+                citationsDiv.innerHTML = data.citations.map(citation => `
+                    <div class="citation-item">
+                        <span class="citation-number">[${citation.number}]</span>
+                        <div class="citation-content">
+                            <a href="${citation.url}" target="_blank" class="citation-title">${citation.title}</a>
+                            <div class="citation-url">${citation.url}</div>
+                        </div>
+                    </div>
+                `).join('');
+                citationsContainer.style.display = 'block';
+            } else {
+                citationsContainer.style.display = 'none';
+            }
+
+            // Show results
+            resultsDiv.style.display = 'block';
+            resultsDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        function formatAnswer(text) {
+            // Convert newlines to <br> and preserve formatting
+            return text
+                .replace(/\n\n/g, '</p><p>')
+                .replace(/\n/g, '<br>')
+                .replace(/^\*\*(.+?)\*\*/gm, '<strong>$1</strong>')
+                .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+                .split('</p><p>')
+                .map(p => `<p>${p}</p>`)
+                .join('');
+        }
+
+        function setLoading(loading) {
+            searchBtn.disabled = loading;
+            btnText.style.display = loading ? 'none' : 'inline';
+            btnLoading.style.display = loading ? 'inline' : 'none';
+        }
+
+        function showError(message) {
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+            errorDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        function hideError() {
+            errorDiv.style.display = 'none';
+        }
+
+        function hideResults() {
+            resultsDiv.style.display = 'none';
+        }
+
+        // Focus on input on page load
+        queryInput.focus();
+    </script>
+</body>
+</html>

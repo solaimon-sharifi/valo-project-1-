@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Spectator Ghost - Valorant Coach Concept</title>
+    <link rel="stylesheet" href="/static/spectator_ghost.css">
+</head>
+<body>
+    <div class="stars"></div>
+    <div class="twinkling"></div>
+    
+    <div class="main-container">
+        <!-- Header -->
+        <header class="header">
+            <div style="text-align: center; margin-bottom: 20px;">
+                <a href="/" style="color: var(--neon-blue); text-decoration: none; font-weight: 600; border: 2px solid var(--neon-blue); padding: 10px 20px; border-radius: 8px; display: inline-block; transition: all 0.3s; text-transform: uppercase; letter-spacing: 2px;">
+                    ← Back to AI Web Search
+                </a>
+            </div>
+            <div class="logo-section">
+                <div class="logo-glow"></div>
+                <h1 class="title">
+                    <span class="ghost-icon">👻</span>
+                    SPECTATOR GHOST
+                    <span class="ai-badge">AI</span>
+                </h1>
+                <p class="subtitle">TACTICAL AI COACH • VALORANT PROTOCOL</p>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <div class="content-wrapper">
+            <!-- Left Panel - AI Coach Display -->
+            <div class="coach-panel">
+                <div class="hologram-container">
+                    <div class="hologram-effect"></div>
+                    <div class="ai-avatar" id="aiAvatar">
+                        <div class="avatar-glow"></div>
+                        <div class="avatar-content">
+                            <div class="avatar-face"></div>
+                            <div class="scan-lines"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Speech Bubble -->
+                    <div class="speech-bubble" id="speechBubble">
+                        <div class="bubble-glow"></div>
+                        <p id="coachAdvice">Select a personality to begin coaching...</p>
+                    </div>
+                </div>
+
+                <!-- Tactical Advice Display -->
+                <div class="tactical-display">
+                    <div class="tactical-header">
+                        <span class="pulse-dot"></span>
+                        LIVE TACTICAL ANALYSIS
+                    </div>
+                    <div class="tactical-items">
+                        <div class="tactical-item">
+                            <span class="icon">📍</span>
+                            <span class="text">Rotate B Site</span>
+                        </div>
+                        <div class="tactical-item">
+                            <span class="icon">🛡️</span>
+                            <span class="text">Buy Shield Next Round</span>
+                        </div>
+                        <div class="tactical-item">
+                            <span class="icon">⚡</span>
+                            <span class="text">Economy: Force Buy</span>
+                        </div>
+                        <div class="tactical-item">
+                            <span class="icon">🎯</span>
+                            <span class="text">Check Angles: Long A</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Panel - Personality Selection & Stats -->
+            <div class="control-panel">
+                <!-- Personality Selection -->
+                <div class="personality-section">
+                    <h2 class="section-title">
+                        <span class="title-icon">🎭</span>
+                        SELECT AI PERSONALITY
+                    </h2>
+                    
+                    <div class="personality-grid">
+                        <!-- Strict Coach -->
+                        <div class="personality-card active" data-personality="strict" onclick="selectPersonality('strict')">
+                            <div class="card-glow"></div>
+                            <div class="card-header">
+                                <div class="personality-icon">🎖️</div>
+                                <h3>STRICT COACH</h3>
+                            </div>
+                            <p class="personality-desc">Professional military-style hologram. Direct, tactical, no-nonsense approach.</p>
+                            <div class="personality-traits">
+                                <span class="trait">Tactical</span>
+                                <span class="trait">Precise</span>
+                                <span class="trait">Disciplined</span>
+                            </div>
+                        </div>
+
+                        <!-- Chill Friend -->
+                        <div class="personality-card" data-personality="chill" onclick="selectPersonality('chill')">
+                            <div class="card-glow"></div>
+                            <div class="card-header">
+                                <div class="personality-icon">😎</div>
+                                <h3>CHILL FRIEND</h3>
+                            </div>
+                            <p class="personality-desc">Relaxed gamer-style AI with hoodie. Supportive and encouraging.</p>
+                            <div class="personality-traits">
+                                <span class="trait">Casual</span>
+                                <span class="trait">Supportive</span>
+                                <span class="trait">Fun</span>
+                            </div>
+                        </div>
+
+                        <!-- Esports Analyst -->
+                        <div class="personality-card" data-personality="analyst" onclick="selectPersonality('analyst')">
+                            <div class="card-glow"></div>
+                            <div class="card-header">
+                                <div class="personality-icon">📊</div>
+                                <h3>ESPORTS ANALYST</h3>
+                            </div>
+                            <p class="personality-desc">Data-driven formal figure with overlays. Statistical and strategic.</p>
+                            <div class="personality-traits">
+                                <span class="trait">Analytical</span>
+                                <span class="trait">Data-Driven</span>
+                                <span class="trait">Strategic</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Performance Stats -->
+                <div class="stats-section">
+                    <h2 class="section-title">
+                        <span class="title-icon">📈</span>
+                        LIVE PERFORMANCE METRICS
+                    </h2>
+                    
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-value">87%</div>
+                            <div class="stat-label">Win Rate</div>
+                            <div class="stat-bar">
+                                <div class="stat-fill" style="width: 87%"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-value">1.42</div>
+                            <div class="stat-label">K/D Ratio</div>
+                            <div class="stat-bar">
+                                <div class="stat-fill" style="width: 71%"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-value">23.5%</div>
+                            <div class="stat-label">HS Rate</div>
+                            <div class="stat-bar">
+                                <div class="stat-fill" style="width: 23.5%"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-value">Diamond 2</div>
+                            <div class="stat-label">Current Rank</div>
+                            <div class="rank-badge">
+                                <span class="rank-icon">💎</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Heat Map Preview -->
+                <div class="heatmap-section">
+                    <h2 class="section-title">
+                        <span class="title-icon">🗺️</span>
+                        TACTICAL HEAT MAP
+                    </h2>
+                    <div class="heatmap-container">
+                        <div class="heatmap-overlay">
+                            <div class="heat-zone hot" style="top: 20%; left: 15%;"></div>
+                            <div class="heat-zone medium" style="top: 60%; left: 40%;"></div>
+                            <div class="heat-zone hot" style="top: 30%; right: 20%;"></div>
+                            <div class="heat-zone cool" style="bottom: 25%; left: 30%;"></div>
+                        </div>
+                        <div class="heatmap-label">ASCENT - SITE A</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Feature Highlights -->
+        <div class="features-section">
+            <h2 class="section-title centered">
+                <span class="title-icon">⚡</span>
+                CORE FEATURES
+            </h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🎤</div>
+                    <h3>Real-Time Voice Coaching</h3>
+                    <p>Whispered tactical advice during gameplay without distraction</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🧠</div>
+                    <h3>AI Pattern Recognition</h3>
+                    <p>Learns your playstyle and enemy patterns for adaptive strategies</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3>Advanced Analytics</h3>
+                    <p>Heat maps, economy tracking, and performance metrics</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎯</div>
+                    <h3>Tactical Overlays</h3>
+                    <p>AR-style projections showing optimal positions and rotations</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const personalities = {
+            strict: {
+                avatar: 'strict',
+                advice: [
+                    "Rotate to B site immediately. Enemy spotted A long.",
+                    "Buy heavy shield. Economy advantage detected.",
+                    "Hold angle. Maintain discipline. Wait for backup.",
+                    "Execute A split. Coordinate with team on my mark.",
+                    "Fall back. Regroup mid. Reassess strategy."
+                ],
+                color: '#ff4655',
+                description: 'Military precision and tactical dominance'
+            },
+            chill: {
+                avatar: 'chill',
+                advice: [
+                    "Yo, they're probably gonna rotate B. Just a heads up!",
+                    "Maybe grab a shield next round? No pressure tho.",
+                    "Nice shot! Keep that energy going, you got this!",
+                    "Chill at mid for a sec, let's see what they do.",
+                    "No worries about that death, we'll get 'em next round!"
+                ],
+                color: '#00f5e4',
+                description: 'Supportive vibes and positive gaming energy'
+            },
+            analyst: {
+                avatar: 'analyst',
+                advice: [
+                    "Statistical analysis: 78% enemy B site probability.",
+                    "Economic model suggests optimal shield purchase.",
+                    "Performance metrics indicate 23% headshot improvement.",
+                    "Map control analysis: Secure mid for rotation advantage.",
+                    "Win probability increased by 34% with current loadout."
+                ],
+                color: '#ece8a3',
+                description: 'Data-driven strategic insights and analytics'
+            }
+        };
+
+        let currentPersonality = 'strict';
+        let adviceInterval;
+
+        function selectPersonality(personality) {
+            currentPersonality = personality;
+            
+            // Update active state
+            document.querySelectorAll('.personality-card').forEach(card => {
+                card.classList.remove('active');
+            });
+            document.querySelector(`[data-personality="${personality}"]`).classList.add('active');
+            
+            // Update avatar
+            const avatar = document.getElementById('aiAvatar');
+            avatar.className = 'ai-avatar ' + personality;
+            
+            // Update color theme
+            document.documentElement.style.setProperty('--personality-color', personalities[personality].color);
+            
+            // Start advice rotation
+            clearInterval(adviceInterval);
+            updateAdvice();
+            adviceInterval = setInterval(updateAdvice, 4000);
+        }
+
+        function updateAdvice() {
+            const advice = personalities[currentPersonality].advice;
+            const randomAdvice = advice[Math.floor(Math.random() * advice.length)];
+            
+            const bubble = document.getElementById('speechBubble');
+            const adviceText = document.getElementById('coachAdvice');
+            
+            // Fade out
+            bubble.style.opacity = '0';
+            
+            setTimeout(() => {
+                adviceText.textContent = randomAdvice;
+                bubble.style.opacity = '1';
+            }, 300);
+        }
+
+        // Initialize
+        selectPersonality('strict');
+
+        // Animated tactical items
+        const tacticalItems = document.querySelectorAll('.tactical-item');
+        let currentIndex = 0;
+
+        setInterval(() => {
+            tacticalItems.forEach(item => item.classList.remove('highlight'));
+            tacticalItems[currentIndex].classList.add('highlight');
+            currentIndex = (currentIndex + 1) % tacticalItems.length;
+        }, 2000);
+    </script>
+</body>
+</html>
