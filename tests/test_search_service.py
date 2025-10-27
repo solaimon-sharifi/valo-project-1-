@@ -9,7 +9,8 @@ from unittest.mock import MagicMock, Mock, patch
 
 import pytest
 
-from src.models import Citation, SearchError, SearchOptions, SearchResult, Source
+from src.models import (Citation, SearchError, SearchOptions, SearchResult,
+                        Source)
 from src.search_service import SearchService
 
 

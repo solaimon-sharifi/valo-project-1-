@@ -9,7 +9,8 @@ from typing import List
 
 import pytest
 
-from src.models import Citation, SearchError, SearchOptions, SearchResult, Source
+from src.models import (Citation, SearchError, SearchOptions, SearchResult,
+                        Source)
 
 
 @pytest.mark.unit

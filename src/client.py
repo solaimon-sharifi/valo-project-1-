@@ -33,7 +33,6 @@ from typing import Any, Dict, Optional
 
 # Load environment variables from .env file (keeps secrets out of code)
 from dotenv import load_dotenv
-
 # OpenAI's official Python library - handles HTTPS, auth, retries
 from openai import APIError, AuthenticationError, OpenAI, RateLimitError
 

@@ -8,7 +8,8 @@ __version__ = "1.0.0"
 __author__ = "Enterprise Development Team"
 
 from src.client import WebSearchClient
-from src.models import Citation, SearchError, SearchOptions, SearchResult, Source
+from src.models import (Citation, SearchError, SearchOptions, SearchResult,
+                        Source)
 from src.parser import ResponseParser
 from src.search_service import SearchService
 
