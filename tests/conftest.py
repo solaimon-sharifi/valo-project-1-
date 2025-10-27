@@ -8,12 +8,11 @@ for testing the web search application.
 import json
 import os
 from pathlib import Path
-from typing import Dict, Any
-from unittest.mock import Mock, MagicMock
+from typing import Any, Dict
+from unittest.mock import MagicMock, Mock
 
 import pytest
 from dotenv import load_dotenv
-
 
 # Load test environment variables
 load_dotenv()
@@ -75,12 +74,12 @@ def mock_openai_client():
 def mock_response_object(valid_api_response: Dict[str, Any]):
     """Create a mock response object that mimics OpenAI response structure."""
     mock_response = Mock()
-    
+
     # Set basic attributes
     mock_response.id = valid_api_response["id"]
     mock_response.model = valid_api_response["model"]
     mock_response.created = valid_api_response["created"]
-    
+
     # Mock output items
     mock_response.output = []
     for item in valid_api_response["output"]:
@@ -88,18 +87,18 @@ def mock_response_object(valid_api_response: Dict[str, Any]):
         for key, value in item.items():
             setattr(mock_item, key, value)
         mock_response.output.append(mock_item)
-    
+
     # Mock helper methods
     def get_output_text():
         for item in mock_response.output:
-            if hasattr(item, 'type') and item.type == 'message':
+            if hasattr(item, "type") and item.type == "message":
                 for content in item.content:
-                    if hasattr(content, 'type') and content.type == 'output_text':
+                    if hasattr(content, "type") and content.type == "output_text":
                         return content.text
         return ""
-    
+
     mock_response.get_output_text = get_output_text
-    
+
     return mock_response
 
 
@@ -116,7 +115,7 @@ def test_config() -> Dict[str, Any]:
         "model": "gpt-4o-mini",
         "timeout": 30,
         "max_retries": 3,
-        "log_level": "DEBUG"
+        "log_level": "DEBUG",
     }
 
 
@@ -129,19 +128,17 @@ def sample_query() -> str:
 @pytest.fixture
 def sample_allowed_domains() -> list[str]:
     """Provide sample allowed domains for filtering."""
-    return [
-        "techcrunch.com",
-        "theverge.com",
-        "arstechnica.com"
-    ]
+    return ["techcrunch.com", "theverge.com", "arstechnica.com"]
 
 
 @pytest.fixture
 def temp_env_vars(monkeypatch):
     """Fixture to temporarily set environment variables for tests."""
+
     def _set_env(**kwargs):
         for key, value in kwargs.items():
             monkeypatch.setenv(key, str(value))
+
     return _set_env
 
 
@@ -157,30 +154,28 @@ def reset_environment(monkeypatch):
 def mock_datetime():
     """Provide a mock datetime for consistent testing."""
     from datetime import datetime
+
     return datetime(2025, 10, 10, 12, 0, 0)
 
 
 # Pytest hooks for custom behavior
 
+
 def pytest_configure(config):
     """Configure pytest with custom settings."""
-    config.addinivalue_line(
-        "markers", "unit: mark test as a unit test"
-    )
-    config.addinivalue_line(
-        "markers", "integration: mark test as an integration test"
-    )
-    config.addinivalue_line(
-        "markers", "api: mark test as requiring real API access"
-    )
+    config.addinivalue_line("markers", "unit: mark test as a unit test")
+    config.addinivalue_line("markers", "integration: mark test as an integration test")
+    config.addinivalue_line("markers", "api: mark test as requiring real API access")
 
 
 def pytest_collection_modifyitems(config, items):
     """Modify test collection to add markers and skip conditions."""
     skip_api = pytest.mark.skip(reason="Requires OPENAI_API_KEY environment variable")
-    
+
     for item in items:
         # Skip API tests if no API key is set
         if "api" in item.keywords:
-            if not os.getenv("OPENAI_API_KEY") or os.getenv("OPENAI_API_KEY").startswith("sk-test"):
+            if not os.getenv("OPENAI_API_KEY") or os.getenv(
+                "OPENAI_API_KEY"
+            ).startswith("sk-test"):
                 item.add_marker(skip_api)
