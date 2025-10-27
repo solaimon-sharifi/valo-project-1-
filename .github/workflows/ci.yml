@@ -28,11 +28,62 @@ jobs:
           pip install -r requirements.txt
           pip install black isort pylint pytest pytest-cov
 
-      - name: Format (auto-fix)
+      - name: Format (check-only)
         run: |
-          # Apply import ordering and formatting so checks are deterministic
-          isort .
-          black .
+          # Fail the job if files are not formatted. This prevents CI auto-fixing
+          isort --profile black --check-only .
+          black --check .
+
+      - name: Lint
+        run: |
+          pylint -j 0 src tests
+
+      - name: Run tests
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          pytest -q --maxfail=1 --disable-warnings --cov=src --cov-report=xml --cov-report=term-missing
+
+      - name: Upload coverage artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage.xml
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    name: Test & Lint (Python ${{ matrix.python-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.11, 3.12]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install black isort pylint pytest pytest-cov
+
+      - name: Format (check-only)
+        run: |
+          # Fail the job if files are not formatted. This prevents CI auto-fixing
+          isort --profile black --check-only .
+          black --check .
 
       - name: Lint
         run: |
@@ -50,55 +101,3 @@ jobs:
           name: coverage-report
           path: coverage.xml
 on:
-jobs:
-name: CI
-
-on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
-
-jobs:
-  test:
-    name: Test & Lint (Python ${{ matrix.python-version }})
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: ['3.11', '3.12']
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: ${{ matrix.python-version }}
-
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-          pip install black isort pylint pytest pytest-cov
-
-      - name: Format (auto-fix)
-        run: |
-          # Ensure imports and formatting are applied so the job passes reliably
-          isort .
-          black .
-
-      - name: Lint
-        run: |
-          pylint -j 0 src tests
-
-      - name: Run tests
-        env:
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY || 'sk-test-key-for-ci' }}
-        run: |
-          pytest -q --maxfail=1 --disable-warnings --cov=src --cov-report=xml --cov-report=term-missing
-
-      - name: Upload coverage artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: coverage-report
-          path: coverage.xml
