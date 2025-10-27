@@ -81,7 +81,7 @@ Help me:
 2. Define the data models I need
 3. Suggest what to build first
 
-I want to use TDD like the enterprise_ai_demo1_websearch example."
+I want to use TDD like the valo_project_1 example."
 ```
 
 **Part 2: Setup Your Repo (20 min)**
@@ -93,10 +93,10 @@ python -m venv venv
 source venv/bin/activate
 
 # Copy structure from demo
-cp ../enterprise_ai_demo1_websearch/pytest.ini .
-cp ../enterprise_ai_demo1_websearch/.pylintrc .
-cp ../enterprise_ai_demo1_websearch/.coveragerc .
-cp ../enterprise_ai_demo1_websearch/requirements.txt .
+cp ../valo_project_1/pytest.ini .
+cp ../valo_project_1/.pylintrc .
+cp ../valo_project_1/.coveragerc .
+cp ../valo_project_1/requirements.txt .
 pip install -r requirements.txt
 
 # Create structure

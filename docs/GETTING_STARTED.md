@@ -17,12 +17,12 @@
 
 ```bash
 # Clone
-git clone https://github.com/kaw393939/enterprise_ai_demo1_websearch.git
-cd enterprise_ai_demo1_websearch
+git clone https://github.com/solaimon-sharifi/valo-project-1-.git
+cd valo_project_1
 
 # Or if you prefer SSH:
-git clone git@github.com:kaw393939/enterprise_ai_demo1_websearch.git
-cd enterprise_ai_demo1_websearch
+git clone git@github.com:solaimon-sharifi/valo-project-1-.git
+cd valo_project_1
 ```
 
 ---
@@ -226,7 +226,7 @@ ls .env  # Should show the file
 cat .env
 
 # Try running from project root
-cd /path/to/enterprise_ai_demo1_websearch
+cd /path/to/valo_project_1
 python -m src.main "test query"
 ```
 

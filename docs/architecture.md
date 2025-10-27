@@ -1,3 +1,15 @@
+# Architecture
+
+This project follows a small, well-separated architecture suitable for teaching:
+
+- `app.py` — Flask demo and routing (presentation layer)
+- `src/client.py` — OpenAI API client wrapper (external integrations)
+- `src/search_service.py` — Orchestration and business logic
+- `src/parser.py` — Defensive parsing of API responses
+- `src/models.py` — Data classes and domain models
+- `tests/` — Unit and integration tests (pytest)
+
+The repo is intentionally minimal to keep the focus on design and testing practices.
 # Web Search Demo - Architecture Document
 
 **Version:** 1.0  

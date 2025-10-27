@@ -657,7 +657,7 @@ Help me:
 3. Identify what to build first
 4. List potential test cases
 
-Use the enterprise_ai_demo1_websearch repo as a reference."
+Use the valo_project_1 repo as a reference."
 ```
 
 ### During Development:
@@ -775,8 +775,8 @@ Suggestions:
 - TTS: https://platform.openai.com/docs/guides/text-to-speech
 
 ### Example Repository:
-- This repo: enterprise_ai_demo1_websearch
-- Study: src/client.py, src/parser.py, tests/
+- This repo: valo_project_1
+ - Study: src/client.py, src/parser.py, tests/
 
 ### Get Help:
 - Claude: "Help me design [project]"

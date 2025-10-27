@@ -47,7 +47,7 @@ Professional practices: <strong>TDD • Clean Architecture • AI Collaboration 
 ```bash
 # Clone and setup
 git clone [repo-url]
-cd enterprise_ai_demo1_websearch
+cd valo_project_1
 python -m venv venv
 source venv/bin/activate
 

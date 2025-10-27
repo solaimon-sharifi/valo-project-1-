@@ -87,10 +87,10 @@ and updated documentation from October 2025."
 ```
 "I'm building a CLI that analyzes images using OpenAI Vision API.
 
-I need:
+   I need:
 1. A test for the ImageAnalyzer class
 2. It should handle network errors gracefully
-3. Use the pattern from enterprise_ai_demo1_websearch
+3. Use the pattern from valo_project_1
 
 Here's my current model: [paste 20 lines]"
 ```
@@ -119,9 +119,9 @@ but I need to add error handling for rate limits.
 
 GOAL: Show me how to implement exponential backoff retry logic.
 
-CONSTRAINTS: 
+- CONSTRAINTS: 
 - Use pytest for tests
-- Follow the error handling pattern in enterprise_ai_demo1_websearch
+- Follow the error handling pattern in valo_project_1
 - Max 3 retries
 
 REFERENCE: Look at src/client.py lines 80-100 in the demo

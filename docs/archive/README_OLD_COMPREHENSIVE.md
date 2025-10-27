@@ -56,7 +56,7 @@
 ```bash
 # 5-minute setup
 git clone [repo]
-cd enterprise_ai_demo1_websearch
+cd valo_project_1
 python -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt

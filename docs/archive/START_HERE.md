@@ -16,7 +16,7 @@ Build a cool project using OpenAI tools + TDD + AI coding assistant (Claude/Copi
 
 ```bash
 # 1. Clone this repo (you already did this)
-cd enterprise_ai_demo1_websearch
+cd valo_project_1
 
 # 2. Create virtual environment
 python -m venv venv

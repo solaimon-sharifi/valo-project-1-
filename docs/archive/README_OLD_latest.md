@@ -72,8 +72,8 @@ We built this tool using the **same techniques you'll use** for your project. In
 
 ```bash
 # 1. Clone and setup
-git clone https://github.com/kaw393939/enterprise_ai_demo1_websearch.git
-cd enterprise_ai_demo1_websearch
+git clone https://github.com/solaimon-sharifi/valo-project-1-.git
+cd valo_project_1
 python -m venv venv
 source venv/bin/activate  # Mac/Linux
 # or: venv\Scripts\activate  # Windows

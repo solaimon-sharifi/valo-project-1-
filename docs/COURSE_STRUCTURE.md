@@ -256,12 +256,12 @@ git init
 git branch -M main
 
 # Copy structure from reference
-cp -r ../enterprise_ai_demo1_websearch/.github .
-cp ../enterprise_ai_demo1_websearch/.gitignore .
-cp ../enterprise_ai_demo1_websearch/.pylintrc .
-cp ../enterprise_ai_demo1_websearch/pytest.ini .
-cp ../enterprise_ai_demo1_websearch/.coveragerc .
-cp ../enterprise_ai_demo1_websearch/requirements.txt .
+cp -r ../valo_project_1/.github .
+cp ../valo_project_1/.gitignore .
+cp ../valo_project_1/.pylintrc .
+cp ../valo_project_1/pytest.ini .
+cp ../valo_project_1/.coveragerc .
+cp ../valo_project_1/requirements.txt .
 
 # Create structure
 mkdir src tests docs

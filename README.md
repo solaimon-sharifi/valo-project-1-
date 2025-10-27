@@ -1,22 +1,10 @@
-# 🚀 Enterprise AI Development
+# Valo Spectator Ghost — Valorant Tactical Coach
 
-> **Learn professional software development by building a real AI application**
-
-[![Tests](https://img.shields.io/badge/tests-69%20passing-brightgreen)]()
+[![CI](https://github.com/solaimon-sharifi/valo-project-1-/actions/workflows/ci.yml/badge.svg)](https://github.com/solaimon-sharifi/valo-project-1-/actions/workflows/ci.yml)
 [![Coverage](https://img.shields.io/badge/coverage-100%25-brightgreen)]()
-[![TDD](https://img.shields.io/badge/methodology-TDD-orange)]()
 
----
+A compact, professor-ready demo and teaching project: a Valorant-themed "Spectator Ghost" that offers tactical advice, commentary, and playstyle suggestions.
 
-## What You'll Learn in 2 Weeks
-
-Build a creative AI application using **OpenAI's APIs** while mastering:
-
-**Test-Driven Development** • **Clean Architecture** • **Enterprise Logging** • **Professional Git** • **CI/CD**
-
-**The Twist:** This codebase is designed as a **living textbook**. Every file teaches you concepts through narrative comments and real examples.
-
----
 
 ## 🎯 Three Ways to Start
 
@@ -68,200 +56,64 @@ Build a creative AI application using **OpenAI's APIs** while mastering:
 ### 💡 Project Resources
 - **[Project Launch Kit](docs/PROJECT_LAUNCH_KIT.md)** - Scope and planning template
 - **[Project Ideas](docs/PROJECT_IDEAS.md)** - 60+ ideas with difficulty ratings
-- **[OpenAI APIs](docs/openai_tools_research_oct2025.md)** - Complete API reference (1,300 lines)
-- **[Demo Playbook](docs/DEMO_PLAYBOOK.md)** - Prepare your final presentation
+## Valo Spectator Ghost — AI Coaching Demo
 
-### 📚 Reference Library
-- **[Architecture Overview](docs/architecture.md)** - System diagrams and design decisions
-- **[OpenAI Web Search Notes](docs/web_search_openai.md)** - Tool behavior, payloads, and examples
+A compact, professor-ready demo that adapts an educational template into a Valorant-themed "Spectator Ghost": an AI assistant that gives tactical commentary and playstyle tips.
 
----
+Quick facts
+-----------
+- Language: Python 3.11+ (developed on Python 3.12)
+- Web UI: Flask demo at `/spectator-ghost` (served by `app.py`)
+- Tests: pytest test suite (69 tests, local run)
 
-## 🏗️ What This Repository Demonstrates
+Getting started (developer)
+---------------------------
+1. Create and activate a virtualenv:
 
-**A production-quality AI web search application** that shows you:
+    python -m venv venv
+    source venv/bin/activate
 
-```
-📂 Architecture                      What You'll Learn
-├── src/models.py                   → Dataclasses, type hints, exceptions
-├── src/client.py                   → API clients, error handling, secrets
-├── src/parser.py                   → Data transformation, defensive parsing
-├── src/search_service.py           → Service layer, validation, orchestration
-├── src/main.py                     → CLI design, user experience
-└── src/logging_config.py           → Enterprise logging, rotation
+2. Install dependencies:
 
-📂 Tests (69 tests, 100% coverage)   How You'll Prove It Works
-├── tests/test_models.py            → Unit testing patterns
-├── tests/test_client.py            → Mocking external APIs
-├── tests/test_parser.py            → Data validation testing
-├── tests/test_search_service.py    → Integration testing
-└── tests/test_main.py              → System testing
-```
+    pip install -r requirements.txt
 
-**Key Feature:** Each source file pairs with a test file. This is Test-Driven Development.
+3. Add your OpenAI API key locally (DO NOT commit this file):
 
----
+    # create a local .env with your key
+    echo "OPENAI_API_KEY=sk-..." > .env
 
-## 🎯 Your Mission (Choose One API or Combination)
+4. Run tests:
 
-**Available Tools:**
-- Chat Completion (conversations)
-- Vision (image analysis)
-- DALL-E 3 (image generation)
-- Whisper (speech-to-text)
-- TTS (text-to-speech)
-- Embeddings (semantic search)
-- Assistants (persistent agents)
-- Sora 2 (video generation)
-- GPT-5 Pro (advanced reasoning)
+    pytest -q
 
-**Examples:**
-- 📸 Recipe from food photo (Vision + Chat)
-- 🎙️ Meeting transcriber (Whisper + Summarization)
-- 🎨 AI art studio (DALL-E 3 + Chat)
-- 📚 Document Q&A (Embeddings + Chat)
-- 🎬 Story to video (Chat + Sora 2)
+5. Run the Flask demo:
 
-**[Browse 10 detailed project ideas →](docs/PROJECT_IDEAS.md)**
+    python app.py
 
----
+    Open: http://localhost:5000/spectator-ghost
 
-## ⚡ Quick Start (5 Minutes)
+What to include for professor submission
+---------------------------------------
+- Ensure `.env` is listed in `.gitignore` and not committed.
+- All tests should pass on CI (we recommend Python 3.11 in the Actions matrix).
+- Provide a short demo video or screenshots showing `/spectator-ghost` in action.
 
-**Prerequisites:** Python 3.11 or higher ([Download](https://python.org))
+Important files
+---------------
+- `app.py` — Flask demo (routes and frontend wiring)
+- `src/` — core logic (search service, client wrapper, parser, models)
+- `templates/` & `static/` — demo UI files (spectator_ghost page)
+- `tests/` — pytest tests covering the codebase
+- `AI_IMAGE_PROMPTS.md` — prompts used for generating concept art
 
-```bash
-# Clone and setup
-git clone https://github.com/kaw393939/enterprise_ai_demo1_websearch.git
-cd enterprise_ai_demo1_websearch
-python -m venv venv
-source venv/bin/activate  # Mac/Linux (Windows: venv\Scripts\activate)
+Next recommended tasks
+----------------------
+1. Replace remaining template strings in `docs/` (I can do this safely, skipping `venv/`).
+2. Add a GitHub Actions workflow to run tests & lint on Python 3.11.
+3. (Optional) Run black/isort and add format/lint checks to CI.
 
-# Install dependencies
-pip install -r requirements.txt
+If you'd like, I can proceed with the above tasks now — tell me whether to (A) rewrite README only, (B) also perform safe search-and-replace in `docs/`, or (C) add CI next.
 
-# Configure API key
-cp .env.example .env
-# Edit .env and add: OPENAI_API_KEY=sk-your-key-here
-
-# Verify it works
-pytest
-python -m src.main "latest AI developments"
-```
-
-✅ **Working?** Great! Next: **[Read Course Structure →](docs/COURSE_STRUCTURE.md)**
-
-❌ **Issues?** Check **[Getting Started Guide →](docs/GETTING_STARTED.md)**
-
----
-
-## 💡 What Makes This Course Unique
-
-### 1. **Code IS the Textbook**
-Every file has narrative comments explaining concepts, design decisions, and alternatives.
-
-**Traditional code:**
-```python
-@dataclass
-class SearchOptions:
-    model: str = "gpt-4o-mini"
-```
-
-**Our teaching code:**
-```python
-@dataclass
-class SearchOptions:
-    """
-    📚 CONCEPT: Dataclasses auto-generate __init__, __repr__, __eq__
-    
-    📝 DESIGN: We default to "gpt-4o-mini" (fastest, cheapest for learning)
-    
-    EXAMPLE:
-    >>> options = SearchOptions()  # Uses defaults
-    >>> options = SearchOptions(model="gpt-4o")  # Override for production
-    """
-    model: str = "gpt-4o-mini"
-```
-
-### 2. **TDD is Non-Negotiable**
-You'll write tests FIRST, then code. This is how professionals prevent bugs.
-
-### 3. **Production Standards**
-Not tutorial code—real patterns you'll use in your career.
-
-### 4. **AI as Learning Partner**
-Learn to use Claude effectively while maintaining quality and understanding.
-
----
-
-## 📊 Grading at a Glance
-
-| Category | Points | Key Requirements |
-|----------|--------|------------------|
-| **Works & Uses APIs** | 30 | No crashes, correct API usage |
-| **Tests & TDD** | 30 | 80%+ coverage, tests written first |
-| **Code Quality** | 25 | Clean architecture, logging, errors |
-| **Documentation & Demo** | 15 | Clear README, 5-min presentation |
-
-**[View full rubric →](docs/GRADING.md)**
-
----
-
-## 🆘 Getting Help
-
-**During class:** Ask instructor, pair with classmates, use Claude
-
-**Outside class:**
-1. Read the relevant guide in `docs/`
-2. Check example code in `src/` and `tests/`
-3. Search the [OpenAI API reference](docs/openai_tools_research_oct2025.md)
-4. Ask Claude with specific context (see [AI Collaboration guide](docs/AI_COLLABORATION.md))
-
-**Common issues:**
-```bash
-pytest -v                                          # See test details
-source venv/bin/activate                           # Activate environment
-pytest --cov=src --cov-report=term-missing         # Check coverage
-git status && git log --oneline                    # Git status
-```
-
----
-
-## 🎓 Learning Outcomes
-
-After completing this course, you will confidently:
-
-✅ Build robust API clients with error handling  
-✅ Write comprehensive tests using TDD methodology  
-✅ Structure applications with clean architecture  
-✅ Implement enterprise-grade logging and monitoring  
-✅ Use professional git workflows and CI/CD  
-✅ Collaborate effectively with AI tools  
-✅ Present technical work clearly  
-
-**Most importantly:** You'll shift from writing "scripts that work" to building "systems that last."
-
----
-
-## 🚀 Ready to Start?
-
-### Option 1: Dive Right In
-**[Getting Started Guide →](docs/GETTING_STARTED.md)** - Get running in 5 minutes
-
-### Option 2: Learn the Concepts First
-**[Code as Textbook →](docs/CODE_AS_TEXTBOOK.md)** - Understand the philosophy
-
-### Option 3: See the Full Plan
-**[Course Structure →](docs/COURSE_STRUCTURE.md)** - 2-week breakdown
-
----
-
-<div align="center">
-
-**Questions?** Check the [Getting Started Guide](docs/GETTING_STARTED.md) or ask your instructor.
-
-*Built with ❤️ for students who want to understand, not just copy-paste*
-
-**Let's build something amazing! 🚀**
-
-</div>
+License
+-------
+See LICENSE or contact the repository owner.
