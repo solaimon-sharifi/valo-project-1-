@@ -1,7 +1,8 @@
 # Valo Spectator Ghost — Valorant Tactical Coach
 
 [![CI](https://github.com/solaimon-sharifi/valo-project-1-/actions/workflows/ci.yml/badge.svg)](https://github.com/solaimon-sharifi/valo-project-1-/actions/workflows/ci.yml)
-[![Coverage](https://img.shields.io/badge/coverage-100%25-brightgreen)]()
+[![Coverage](https://img.shields.io/badge/coverage-100%25-brightgreen)](https://github.com/solaimon-sharifi/valo-project-1-/actions/workflows/ci.yml)
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-none-lightgrey)](https://your-live-demo.example)
 
 A compact, professor-ready demo and teaching project: a Valorant-themed "Spectator Ghost" that offers tactical advice, commentary, and playstyle suggestions.
 
@@ -79,8 +80,9 @@ Getting started (developer)
 
 3. Add your OpenAI API key locally (DO NOT commit this file):
 
-    # create a local .env with your key
-    echo "OPENAI_API_KEY=sk-..." > .env
+    # copy the example and edit, then add your key
+    cp .env.example .env
+    # then edit .env and set OPENAI_API_KEY
 
 4. Run tests:
 
@@ -97,6 +99,14 @@ What to include for professor submission
 - Ensure `.env` is listed in `.gitignore` and not committed.
 - All tests should pass on CI (we recommend Python 3.11 in the Actions matrix).
 - Provide a short demo video or screenshots showing `/spectator-ghost` in action.
+
+Demo / Screenshots
+------------------
+Below are example screenshots of the demo UI. Replace these with real screenshots from your run when you have them.
+
+![Demo 1](static/images/demo1.svg)
+
+![Demo 2](static/images/demo2.svg)
 
 Important files
 ---------------

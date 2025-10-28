@@ -373,7 +373,7 @@ How do I implement this?"
 
 **Option 3: Point to working code**
 ```
-"Look at how enterprise_ai_demo1_websearch handles this
+"Look at how valo_project_1 (Valorant Tactical Coach) handles this
 in src/client.py lines 50-70.
 
 Help me adapt that pattern for my use case."

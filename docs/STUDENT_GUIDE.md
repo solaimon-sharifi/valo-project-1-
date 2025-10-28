@@ -152,7 +152,7 @@ Show me:
 2. Implementation with error handling
 3. How to mock the API in tests
 
-Use the pattern from enterprise_ai_demo1_websearch."
+Use the pattern from valo_project_1 (Valorant Tactical Coach)."
 ```
 
 **Part 3: Add Logging (30 min)**

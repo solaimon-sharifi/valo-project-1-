@@ -650,7 +650,7 @@ coverage-badge -o coverage.svg -f
 ### Why This Architecture?
 
 ```
-enterprise_ai_demo1_websearch/
+valo_project_1/
 │
 ├── 📂 src/                          # Production code (the application)
 │   ├── __init__.py                  # Makes src a package
