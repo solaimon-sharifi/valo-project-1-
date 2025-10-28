@@ -106,9 +106,9 @@ Demo / Screenshots
 ------------------
 Below are example screenshots of the demo UI. Replace these with real screenshots from your run when you have them.
 
-![Demo 1](static/images/demo1.svg)
+![SS1](static/images/ss1.png)
 
-![Demo 2](static/images/demo2.svg)
+![SS2](static/images/ss2.png)
 
 Important files
 ---------------

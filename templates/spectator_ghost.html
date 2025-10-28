@@ -201,14 +201,22 @@
                     </h2>
                     <div class="screenshot-grid">
                         <div class="screenshot-item">
-                            <img src="/static/images/demo_screenshot_1.svg" alt="Demo screenshot 1" />
+                            <!-- Prefer PNG (your uploaded screenshots) and fall back to the existing SVG placeholder -->
+                            <picture>
+                                <source srcset="/static/images/ss1.png" type="image/png">
+                                <img src="/static/images/demo_screenshot_1.svg" alt="Demo screenshot 1" />
+                            </picture>
                             <div class="screenshot-caption">Main dashboard preview</div>
                         </div>
                         <div class="screenshot-item">
-                            <img src="/static/images/demo_screenshot_2.svg" alt="Demo screenshot 2" />
+                            <picture>
+                                <source srcset="/static/images/ss2.png" type="image/png">
+                                <img src="/static/images/demo_screenshot_2.svg" alt="Demo screenshot 2" />
+                            </picture>
                             <div class="screenshot-caption">Tactical heatmap preview</div>
                         </div>
                     </div>
+                    <p class="screenshot-note" style="margin-top:8px; font-size:0.9rem; color:var(--muted);">Tip: Upload `ss1.png` and `ss2.png` to <code>/static/images/</code> to replace the placeholders automatically.</p>
                 </div>
             </div>
         </div>
