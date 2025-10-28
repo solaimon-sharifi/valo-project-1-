@@ -14,31 +14,84 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Trigger Render deploy via API
+      - name: Trigger Render deploy and wait for completion
         env:
           RENDER_SERVICE_ID: ${{ secrets.RENDER_SERVICE_ID }}
           RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
         run: |
-          if [ -z "$RENDER_SERVICE_ID" ] || [ -z "$RENDER_API_KEY" ]; then
+          set -euo pipefail
+          if [ -z "${RENDER_SERVICE_ID:-}" ] || [ -z "${RENDER_API_KEY:-}" ]; then
             echo "Missing RENDER_SERVICE_ID or RENDER_API_KEY secrets. Skipping deploy.";
             exit 1;
           fi
 
           echo "Triggering deploy for Render service: $RENDER_SERVICE_ID"
-          # Create a new deploy. This uses the Render REST API. The endpoint below is the
-          # standard deploy creation endpoint and will start a new deploy for the service.
-          # If Render changes their API, update this step per Render docs.
-          RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" -X POST \
+          # Create a new deploy and capture the response body and HTTP code
+          HTTP_CODE=$(curl -s -w "%{http_code}" -o /tmp/deploy_response.json -X POST \
             -H "Authorization: Bearer $RENDER_API_KEY" \
             -H "Content-Type: application/json" \
             -d '{"clearCache":true}' \
             "https://api.render.com/v1/services/$RENDER_SERVICE_ID/deploys")
 
-          if [ "$RESPONSE" -ge 200 ] && [ "$RESPONSE" -lt 300 ]; then
-            echo "Render deploy triggered (HTTP $RESPONSE).";
-          else
-            echo "Render deploy failed (HTTP $RESPONSE).";
+          if [ "$HTTP_CODE" -lt 200 ] || [ "$HTTP_CODE" -ge 300 ]; then
+            echo "Render deploy creation failed (HTTP $HTTP_CODE). Response:";
+            cat /tmp/deploy_response.json || true;
             exit 1;
+          fi
+
+          DEPLOY_ID=$(jq -r '.id // .deploy.id // .deployId // empty' /tmp/deploy_response.json)
+          if [ -z "$DEPLOY_ID" ]; then
+            echo "Could not extract deploy id from response; full response:";
+            cat /tmp/deploy_response.json;
+            # Try listing deploys to find the most recent one
+            echo "Falling back to listing recent deploys...";
+            DEPLOY_ID=$(curl -s -H "Authorization: Bearer $RENDER_API_KEY" "https://api.render.com/v1/services/$RENDER_SERVICE_ID/deploys?limit=5" | jq -r '.[0].id // empty')
+          fi
+
+          if [ -z "$DEPLOY_ID" ]; then
+            echo "Unable to determine deploy id. Aborting.";
+            exit 1;
+          fi
+
+          echo "Waiting for deploy $DEPLOY_ID to complete..."
+          # Poll deploy status until it reaches a terminal state or timeout
+          MAX_SECONDS=900  # 15 minutes
+          INTERVAL=6
+          ELAPSED=0
+          while [ $ELAPSED -lt $MAX_SECONDS ]; do
+            STATUS_JSON=$(curl -s -H "Authorization: Bearer $RENDER_API_KEY" "https://api.render.com/v1/services/$RENDER_SERVICE_ID/deploys/$DEPLOY_ID")
+            STATE=$(echo "$STATUS_JSON" | jq -r '.state // .status // empty')
+            echo "Deploy state: ${STATE:-unknown} (elapsed: ${ELAPSED}s)"
+            if [ "$STATE" = "succeeded" ] || [ "$STATE" = "success" ]; then
+              echo "Deploy succeeded.";
+              break
+            fi
+            if [ "$STATE" = "failed" ] || [ "$STATE" = "error" ]; then
+              echo "Deploy failed. Deploy details:";
+              echo "$STATUS_JSON";
+              exit 1
+            fi
+            sleep $INTERVAL
+            ELAPSED=$((ELAPSED + INTERVAL))
+          done
+
+          if [ $ELAPSED -ge $MAX_SECONDS ]; then
+            echo "Timed out waiting for deploy to finish.";
+            echo "Last known state:";
+            echo "$STATUS_JSON";
+            exit 1;
+          fi
+
+          # Attempt to fetch the service info and extract a public URL
+          SERVICE_JSON=$(curl -s -H "Authorization: Bearer $RENDER_API_KEY" "https://api.render.com/v1/services/$RENDER_SERVICE_ID")
+          # Try a few likely fields for a domain
+          PUBLIC_URL=$(echo "$SERVICE_JSON" | jq -r '.service?.defaultDomain // .defaultDomain // .service?.serviceDetails?.defaultDomain // .service?.url // .url // empty')
+          if [ -n "$PUBLIC_URL" ]; then
+            echo "Service public URL: https://$PUBLIC_URL";
+          else
+            echo "Could not determine a public URL programmatically. Full service JSON:";
+            echo "$SERVICE_JSON";
+            echo "Please check your Render dashboard for the public URL.";
           fi
 name: Deploy to Render
 
