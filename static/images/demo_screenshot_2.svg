@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="700" viewBox="0 0 1200 700">
+  <defs>
+    <linearGradient id="g2" x1="0" x2="1">
+      <stop offset="0" stop-color="#0b1f2a"/>
+      <stop offset="1" stop-color="#1f0b2a"/>
+    </linearGradient>
+    <style>
+      .bg { fill: url(#g2); }
+      .panel { fill: rgba(0,0,0,0.5); stroke: #ff3b5b; stroke-width: 4; }
+      .title { font-family: Inter, Arial, sans-serif; fill: #ffe4a3; font-size: 36px; font-weight:700 }
+      .sub { font-family: Inter, Arial, sans-serif; fill: #9fd; font-size: 18px }
+    </style>
+  </defs>
+  <rect class="bg" width="1200" height="700" rx="12"/>
+  <rect x="60" y="60" width="520" height="320" rx="10" class="panel"/>
+  <rect x="620" y="60" width="520" height="320" rx="10" class="panel"/>
+  <rect x="60" y="420" width="1080" height="200" rx="10" fill="#081a20" opacity="0.8" stroke="#0ff" stroke-width="2"/>
+  <text x="80" y="120" class="title">Tactical Heat Map — Demo Screenshot</text>
+  <text x="80" y="160" class="sub">Placeholder image. Replace with your real screenshot (demo_screenshot_2.png).</text>
+</svg>
