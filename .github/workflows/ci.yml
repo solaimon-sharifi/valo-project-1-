@@ -45,6 +45,7 @@ jobs:
 
       - name: Format (check-only)
         run: |
+          # Enforce formatting in CI (do not auto-modify files)
           isort --profile black --check-only .
           black --check .
 
@@ -64,6 +65,12 @@ jobs:
       - name: Run tests
         run: |
           pytest -q --maxfail=1 --disable-warnings --cov=src --cov-report=xml --cov-report=term-missing
+
+      - name: Show coverage file
+        run: |
+          echo "Coverage files in workspace:"
+          ls -la || true
+          test -f coverage.xml && echo "coverage.xml exists" || echo "coverage.xml missing"
 
       - name: Upload coverage artifact
         uses: actions/upload-artifact@v4
