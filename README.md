@@ -4,6 +4,8 @@
 [![Coverage](https://img.shields.io/badge/coverage-100%25-brightgreen)](https://github.com/solaimon-sharifi/valo-project-1-/actions/workflows/ci.yml)
 [![Live Demo](https://img.shields.io/badge/Live%20Demo-none-lightgrey)](https://your-live-demo.example)
 
+<a href="https://your-live-demo.example" target="_blank" rel="noopener">Live Demo — Valo Spectator Ghost</a>
+
 A compact, professor-ready demo and teaching project: a Valorant-themed "Spectator Ghost" that offers tactical advice, commentary, and playstyle suggestions.
 
 
