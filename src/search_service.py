@@ -193,6 +193,8 @@ class DemoSearchService:  # pragma: no cover
     """
 
     def __init__(self):
+        # Flag used by the web app to detect demo mode
+        self.demo_mode = True
         self.client = _DummyWebSearchClient()
         self.parser = ResponseParser()
 
