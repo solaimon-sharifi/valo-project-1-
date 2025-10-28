@@ -20,5 +20,6 @@ ENV PORT=5000
 
 EXPOSE 5000
 
-# Use Gunicorn for production
-CMD ["gunicorn", "app:app", "--bind", "0.0.0.0:5000", "--workers", "2"]
+# Use Gunicorn for production. Use shell form so $PORT (provided by Render) is expanded.
+# If $PORT is not set, default to 5000 via the ENV above.
+CMD gunicorn app:app --bind 0.0.0.0:${PORT:-5000} --workers 2
