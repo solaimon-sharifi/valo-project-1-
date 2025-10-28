@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800">
+  <rect width="100%" height="100%" fill="#1f2933"/>
+  <g fill="#cbd5da" font-family="Verdana,Segoe UI,Helvetica,Arial" font-size="36" text-anchor="middle">
+    <text x="50%" y="45%">Demo Placeholder</text>
+    <text x="50%" y="55%" font-size="22">demo2.svg</text>
+  </g>
+</svg>
