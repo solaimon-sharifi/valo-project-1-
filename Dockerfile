@@ -20,6 +20,8 @@ ENV PORT=5000
 
 EXPOSE 5000
 
-# Use Gunicorn for production. Use shell form so $PORT (provided by Render) is expanded.
-# If $PORT is not set, default to 5000 via the ENV above.
-CMD gunicorn app:app --bind 0.0.0.0:${PORT:-5000} --workers 2
+# Use debug startup wrapper in CI/Render to capture environment and debug logs.
+# The wrapper will exec gunicorn with the provided $PORT (or 5000 if unset).
+COPY start-debug.sh /app/start-debug.sh
+RUN chmod +x /app/start-debug.sh
+CMD ["/bin/bash", "/app/start-debug.sh"]
