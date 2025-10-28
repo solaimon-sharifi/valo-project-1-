@@ -34,11 +34,15 @@ api_key = os.getenv("OPENAI_API_KEY")
 try:
     # Use create_search_service to allow demo mode when no API key is present
     search_service = create_search_service(api_key=api_key, allow_demo=True)
-    app.config["DEMO_MODE"] = getattr(search_service, "demo_mode", False) or isinstance(
-        search_service, object
-    ) and search_service.__class__.__name__ == "DemoSearchService"
+    app.config["DEMO_MODE"] = (
+        getattr(search_service, "demo_mode", False)
+        or isinstance(search_service, object)
+        and search_service.__class__.__name__ == "DemoSearchService"
+    )
     if app.config["DEMO_MODE"]:
-        print("⚠️  Running in DEMO mode: OPENAI_API_KEY not set. Using local demo client.")
+        print(
+            "⚠️  Running in DEMO mode: OPENAI_API_KEY not set. Using local demo client."
+        )
 except Exception as e:
     # If initialization fails (unexpected), surface the error and exit
     print(f"Error initializing search service: {e}")

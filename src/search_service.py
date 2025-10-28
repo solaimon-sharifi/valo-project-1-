@@ -4,13 +4,12 @@ Search service for orchestrating web search operations.
 This module provides the business logic layer for web search.
 """
 
-from typing import List, Optional, Dict, Any
+from typing import Any, Dict, List, Optional
 
+# Local application imports
+from src.client import WebSearchClient
 from src.models import SearchError, SearchOptions, SearchResult
 from src.parser import ResponseParser
-
-# Import the real client at module level so tests can patch it when needed
-from src.client import WebSearchClient
 
 
 # A tiny demo client used when no API key is available. This returns a
@@ -20,7 +19,9 @@ class _DummyWebSearchClient:  # pragma: no cover
     def __init__(self):
         self.api_key = None
 
-    def search(self, query: str, options: Optional[SearchOptions] = None) -> Dict[str, Any]:
+    def search(
+        self, query: str, options: Optional[SearchOptions] = None
+    ) -> Dict[str, Any]:
         # Return a minimal, deterministic response that the parser can handle
         return {
             "id": "demo-1",
@@ -48,7 +49,9 @@ class _DummyWebSearchClient:  # pragma: no cover
                 {
                     "type": "web_search_call",
                     "id": "demo-search-1",
-                    "action": {"sources": [{"url": "https://example.com", "type": "web"}]},
+                    "action": {
+                        "sources": [{"url": "https://example.com", "type": "web"}]
+                    },
                 },
             ],
         }
@@ -77,7 +80,7 @@ class SearchService:
 
         self.client = WebSearchClient(api_key=api_key)
         self.parser = ResponseParser()
-    
+
     def search(
         self, query: str, options: Optional[SearchOptions] = None
     ) -> SearchResult:
@@ -193,10 +196,14 @@ class DemoSearchService:  # pragma: no cover
         self.client = _DummyWebSearchClient()
         self.parser = ResponseParser()
 
-    def search(self, query: str, options: Optional[SearchOptions] = None) -> SearchResult:
+    def search(
+        self, query: str, options: Optional[SearchOptions] = None
+    ) -> SearchResult:
         # Reuse the same logic as the production service but with a local client
         if not self.validate_query(query):
-            raise ValueError("Invalid query: must be non-empty and under 5000 characters")
+            raise ValueError(
+                "Invalid query: must be non-empty and under 5000 characters"
+            )
 
         if options is None:
             options = SearchOptions()
@@ -228,13 +235,17 @@ class DemoSearchService:  # pragma: no cover
             raise ValueError("Too many domains (max 20 allowed)")
         for domain in domains:
             if domain.startswith("http://") or domain.startswith("https://"):
-                raise ValueError(f"Invalid domain '{domain}': remove http:// or https:// prefix")
+                raise ValueError(
+                    f"Invalid domain '{domain}': remove http:// or https:// prefix"
+                )
             if not domain or " " in domain:
                 raise ValueError(f"Invalid domain format: '{domain}'")
         return SearchOptions(allowed_domains=domains)
 
 
-def create_search_service(api_key: Optional[str] = None, allow_demo: bool = False):  # pragma: no cover
+def create_search_service(
+    api_key: Optional[str] = None, allow_demo: bool = False
+):  # pragma: no cover
     """Factory that returns a SearchService or DemoSearchService depending on
     whether an API key is provided and demo mode is allowed.
     """
