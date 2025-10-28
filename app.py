@@ -13,7 +13,7 @@ from flask import Flask, jsonify, render_template, request
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from src.models import SearchError, SearchOptions
-from src.search_service import SearchService
+from src.search_service import create_search_service
 
 # Load environment variables from the project root
 project_root = os.path.dirname(os.path.abspath(__file__))
@@ -25,20 +25,23 @@ app.config["SECRET_KEY"] = os.getenv(
     "SECRET_KEY", "dev-secret-key-change-in-production"
 )
 
-# Get API key from environment
+# Get API key from environment (may be None in demo mode)
 api_key = os.getenv("OPENAI_API_KEY")
-if not api_key:
-    print("Error: OPENAI_API_KEY not found in environment")
-    print(f"Tried to load from: {dotenv_path}")
-    print("Please ensure OPENAI_API_KEY is set in your .env file")
-    sys.exit(1)
 
-# Initialize search service
+# Initialize search service. If no API key is available we run in demo
+# mode using a lightweight local client—this allows the web UI to function
+# without a real OpenAI key (useful for demos and local testing).
 try:
-    search_service = SearchService(api_key=api_key)
-except ValueError as e:
+    # Use create_search_service to allow demo mode when no API key is present
+    search_service = create_search_service(api_key=api_key, allow_demo=True)
+    app.config["DEMO_MODE"] = getattr(search_service, "demo_mode", False) or isinstance(
+        search_service, object
+    ) and search_service.__class__.__name__ == "DemoSearchService"
+    if app.config["DEMO_MODE"]:
+        print("⚠️  Running in DEMO mode: OPENAI_API_KEY not set. Using local demo client.")
+except Exception as e:
+    # If initialization fails (unexpected), surface the error and exit
     print(f"Error initializing search service: {e}")
-    print("Please ensure OPENAI_API_KEY is set in your .env file")
     sys.exit(1)
 
 

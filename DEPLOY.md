@@ -32,3 +32,18 @@ Option B — Docker (portable)
 Quick notes
 - Add `OPENAI_API_KEY` to platform secrets — never store keys in the repo.
 - For simple demos, Render is fast and requires minimal config.
+
+Demo mode
+---------
+
+If you don't want to provide an `OPENAI_API_KEY` (for example when sharing
+the repo or during a classroom demo), the app will run in a safe demo mode
+and return deterministic example responses. This is useful for showing the
+UI without exposing secrets or using real API calls.
+
+Files included for deployment
+-----------------------------
+
+- `Dockerfile` — builds a container image that runs the app with Gunicorn.
+- `Procfile` — for Render/Heroku-style platforms that use Procfiles.
+
