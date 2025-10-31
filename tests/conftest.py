@@ -16,8 +16,10 @@ import pytest
 try:
     from dotenv import load_dotenv
 except Exception:  # pragma: no cover - optional dependency fallback
+
     def load_dotenv(*args, **kwargs):  # type: ignore
         return False
+
 
 # Load test environment variables
 load_dotenv()

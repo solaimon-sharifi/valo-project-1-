@@ -55,7 +55,9 @@ def generate_advice(stats: RoundStats):
 
     _, _, _, kd_ratio = parse_kda(stats.kda)
     first_duel_rate = (
-        (stats.first_duels_won / stats.first_duels_taken) if stats.first_duels_taken > 0 else 0.0
+        (stats.first_duels_won / stats.first_duels_taken)
+        if stats.first_duels_taken > 0
+        else 0.0
     )
 
     tips: List[Advice] = []
