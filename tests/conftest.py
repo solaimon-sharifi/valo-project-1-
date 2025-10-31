@@ -12,6 +12,7 @@ from typing import Any, Dict
 from unittest.mock import MagicMock, Mock
 
 import pytest
+
 try:
     from dotenv import load_dotenv
 except Exception:  # pragma: no cover - optional dependency fallback

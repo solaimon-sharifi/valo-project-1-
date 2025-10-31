@@ -10,7 +10,6 @@ from fastapi.staticfiles import StaticFiles
 from .coach import generate_advice
 from .schemas import CoachResponse, HeatMap, Metrics, RoundStats
 
-
 ROOT = Path(__file__).resolve().parents[1]
 WEB_DIR = ROOT / "web"
 
