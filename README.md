@@ -129,3 +129,38 @@ If you'd like, I can proceed with the above tasks now — tell me whether to (A)
 License
 -------
 See LICENSE or contact the repository owner.
+
+---
+
+## 🚀 FastAPI MVP: Valorant Spectator Ghost
+
+[![Valorant Coach CI](https://github.com/solaimon-sharifi/valo-project-1-/actions/workflows/valorant-coach-ci.yml/badge.svg?branch=main)](https://github.com/solaimon-sharifi/valo-project-1-/actions/workflows/valorant-coach-ci.yml)
+
+A minimal, fully self-contained FastAPI version lives under `valorant-coach/`. It provides a rule-based coach API with a tiny web page and its own tests/requirements.
+
+- Location: `valorant-coach/`
+- API: FastAPI (Uvicorn)
+- No external APIs or secrets required
+
+Run locally
+-----------
+```bash
+cd valorant-coach
+python -m venv .venv && . .venv/bin/activate   # Windows: .venv\Scripts\activate
+pip install -r requirements.txt
+uvicorn src.app:app --reload
+```
+
+Open the tiny UI at `valorant-coach/web/index.html` in your browser, fill the form, and click "Get Advice".
+
+Run tests
+---------
+```bash
+cd valorant-coach
+pytest -q -c /dev/null
+```
+
+CI
+--
+This repo includes a root workflow that runs the MVP tests on push/PR to `valorant-coach/**`.
+Badge above links to the workflow run history.

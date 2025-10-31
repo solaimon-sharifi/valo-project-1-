@@ -64,8 +64,19 @@ body {
 /* Main Container */
 .main-container {
     max-width: 1800px;
+    width: min(1800px, 96%);
     margin: 0 auto;
     padding: 20px;
+}
+
+/* Make images responsive so the gallery and screenshots scale nicely */
+img,
+.screenshot-item img,
+.screenshot-item picture,
+.screenshot-item source {
+    max-width: 100%;
+    height: auto;
+    display: block;
 }
 
 /* Header */
@@ -159,9 +170,28 @@ body {
 /* Content Wrapper */
 .content-wrapper {
     display: grid;
+    /* Reverted to original layout: equal-width columns for coach and control panels */
     grid-template-columns: 1fr 1fr;
     gap: 30px;
     margin-bottom: 40px;
+}
+
+/* Responsive: stack panels on narrow screens */
+@media (max-width: 1100px) {
+    .content-wrapper {
+        grid-template-columns: 1fr;
+    }
+    .title {
+        font-size: clamp(1.8rem, 6vw, 3.2rem);
+    }
+    .hologram-container { min-height: 300px; }
+}
+
+/* Make headings and large text scale on small devices */
+@media (max-width: 600px) {
+    .title { font-size: clamp(1.6rem, 8vw, 2.6rem); }
+    .main-container { padding: 12px; }
+    .speech-bubble { padding: 18px; max-width: 90%; }
 }
 
 /* Coach Panel */

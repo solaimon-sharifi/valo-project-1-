@@ -1,6 +1,7 @@
 """
-Flask Web Application for AI Web Search Demo
-Provides a web interface for the OpenAI web search functionality.
+Flask Web Application for the Valo Spectator Ghost demo.
+This lightweight demo provides a spectator UI and does not expose
+the AI web search functionality in the public UI.
 """
 
 import os
@@ -8,9 +9,6 @@ import sys
 
 from dotenv import load_dotenv
 from flask import Flask, jsonify, render_template, request
-
-# Add the project root to the Python path
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from src.models import SearchError, SearchOptions
 from src.search_service import create_search_service
@@ -57,7 +55,7 @@ def index():
 
 @app.route("/spectator-ghost")
 def spectator_ghost():
-    """Render the AI Spectator Ghost concept page."""
+    """Render the Spectator Ghost concept page."""
     return render_template("spectator_ghost.html")
 
 
@@ -84,18 +82,20 @@ def search():
             # Split by comma and clean up
             domains = [d.strip() for d in domains_input.split(",") if d.strip()]
 
-        # Create search options
-        options = SearchOptions()
+        # Create search options (apply domain filters if provided)
+        options = (
+            search_service.apply_domain_filters(domains) if domains else SearchOptions()
+        )
 
         # Perform search
-        result = search_service.search(query, options, domains if domains else None)
+        result = search_service.search(query, options)
 
         # Format response
         return jsonify(
             {
                 "success": True,
                 "query": query,
-                "answer": result.answer,
+                "answer": result.text,
                 "citations": [
                     {"title": citation.title, "url": citation.url, "number": i + 1}
                     for i, citation in enumerate(result.citations)
@@ -123,19 +123,19 @@ def search():
 @app.route("/health")
 def health():
     """Health check endpoint."""
-    return jsonify({"status": "healthy", "service": "AI Web Search"})
+    return jsonify({"status": "healthy", "service": "Valo Spectator Ghost"})
 
 
 if __name__ == "__main__":
     # Run the Flask app
-    port = int(os.getenv("PORT", 5000))
+    port = int(os.getenv("PORT", "5000"))
     debug = os.getenv("FLASK_DEBUG", "False").lower() == "true"
 
-    print(f"\n{'='*80}")
-    print(f"🚀 AI Web Search Application Starting")
-    print(f"{'='*80}")
+    print("\n" + ("=" * 80))
+    print("🚀 Valo Spectator Ghost Application Starting")
+    print("=" * 80)
     print(f"📍 URL: http://localhost:{port}")
-    print(f"🔍 Ready to search the web with AI!")
-    print(f"{'='*80}\n")
+    print("🎮 Spectator demo ready")
+    print(("=" * 80) + "\n")
 
     app.run(host="0.0.0.0", port=port, debug=debug)

@@ -12,7 +12,11 @@ from typing import Any, Dict
 from unittest.mock import MagicMock, Mock
 
 import pytest
-from dotenv import load_dotenv
+try:
+    from dotenv import load_dotenv
+except Exception:  # pragma: no cover - optional dependency fallback
+    def load_dotenv(*args, **kwargs):  # type: ignore
+        return False
 
 # Load test environment variables
 load_dotenv()

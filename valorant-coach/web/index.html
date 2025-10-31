@@ -1,0 +1,350 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Valorant Tactical Coach — MVP</title>
+    <style>
+      :root {
+        --bg: #0b0f16;
+        --card: #121827;
+        --accent: #7c3aed;
+        --accent-2: #06b6d4;
+        --ok: #10b981;
+        --warn: #ef4444;
+        --text: #e5e7eb;
+        --muted: #9ca3af;
+      }
+      body { margin: 0; font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, 'Segoe UI', sans-serif; background: linear-gradient(180deg, #0b0f16 0%, #0b0f16 60%, #0e1420 100%); color: var(--text); }
+      header { padding: 16px 24px; border-bottom: 1px solid #1f2937; display: flex; justify-content: space-between; align-items: center; }
+      .brand { font-weight: 700; letter-spacing: 0.5px; }
+      .container { max-width: 1100px; margin: 24px auto; padding: 0 16px; }
+      .grid { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 16px; }
+      .panel { background: linear-gradient(180deg, #0f172a 0%, #0b1120 100%); border: 1px solid #111827; border-radius: 12px; box-shadow: 0 10px 24px rgba(0,0,0,0.35); }
+      .panel h2 { margin: 0; padding: 16px; font-size: 16px; letter-spacing: 0.5px; border-bottom: 1px solid #111827; background: linear-gradient(180deg, #111827 0%, #0b1120 100%); }
+      .panel .content { padding: 16px; }
+      .toolbar { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+      select, input[type="text"], input[type="number"] { background: #0b1220; border: 1px solid #1f2937; color: var(--text); padding: 8px 10px; border-radius: 8px; }
+      button { background: linear-gradient(90deg, var(--accent) 0%, var(--accent-2) 100%); color: white; border: 0; padding: 10px 14px; border-radius: 10px; cursor: pointer; font-weight: 600; box-shadow: 0 6px 20px rgba(6,182,212,0.16); }
+      button:disabled { opacity: 0.6; cursor: not-allowed; }
+      .cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 12px; }
+      .card { background: var(--card); border: 1px solid #111827; border-radius: 10px; padding: 12px; }
+      .metric { font-size: 22px; font-weight: 700; }
+      .muted { color: var(--muted); font-size: 12px; }
+      .advice-list { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; }
+      .advice-item { padding: 10px 12px; border-radius: 8px; border: 1px solid #111827; background: #0c1324; }
+      .priority-high { border-left: 4px solid var(--warn); }
+      .priority-medium { border-left: 4px solid #f59e0b; }
+      .priority-low { border-left: 4px solid var(--ok); }
+      .mapframe { position: relative; height: 360px; border-radius: 12px; overflow: hidden; border: 1px solid #111827; background: radial-gradient(circle at 30% 30%, #0b1a2a, #08111b 60%); }
+      .mapframe .label { position: absolute; top: 8px; left: 10px; font-weight: 700; color: var(--muted); }
+      canvas { position: absolute; left: 0; top: 0; width: 100%; height: 100%; }
+      .toast { display:none; position: fixed; top: 0; left: 0; right: 0; background: #7f1d1d; color: #fecaca; padding: 10px 14px; font-weight: 600; text-align: center; z-index: 1000; }
+      .sideform { display: grid; gap: 8px; }
+      .row { display:flex; gap: 8px; }
+      .row > * { flex: 1; }
+      @media (max-width: 960px) { .grid { grid-template-columns: 1fr; } .cards { grid-template-columns: repeat(2, 1fr); } }
+    </style>
+  </head>
+  <body>
+    <div id="toast" class="toast">Network error. Please try again.</div>
+    <header>
+      <div class="brand">Valorant Tactical Coach — MVP</div>
+      <div class="toolbar">
+        <label>
+          <span class="muted">Personality</span>
+          <select id="personalitySelect">
+            <option value="analyst">Analyst</option>
+            <option value="strict">Strict</option>
+            <option value="chill">Chill</option>
+          </select>
+        </label>
+        <button id="getAdviceBtn">Get Advice</button>
+      </div>
+    </header>
+    <main class="container">
+      <div class="grid">
+        <section class="panel">
+          <h2>Match Board</h2>
+          <div class="content">
+            <div class="cards">
+              <div class="card">
+                <div class="muted">Win Rate</div>
+                <div class="metric" id="metricWinRate">—</div>
+              </div>
+              <div class="card">
+                <div class="muted">K/D</div>
+                <div class="metric" id="metricKD">—</div>
+              </div>
+              <div class="card">
+                <div class="muted">First Duel</div>
+                <div class="metric" id="metricFDR">—</div>
+              </div>
+              <div class="card">
+                <div class="muted">Rank</div>
+                <div class="metric" id="metricRank">—</div>
+              </div>
+            </div>
+
+            <div style="height: 16px"></div>
+
+            <div class="mapframe">
+              <div class="label">Heatmap — Ascent (demo)</div>
+              <canvas id="heatmapCanvas"></canvas>
+            </div>
+
+            <div style="height: 16px"></div>
+
+            <h3 style="margin:0 0 8px 0">Tactical Advice</h3>
+            <ul id="tipsList" class="advice-list"></ul>
+
+            <h3 style="margin:16px 0 8px 0">Loadout</h3>
+            <div id="loadoutText" class="card">—</div>
+          </div>
+        </section>
+
+        <aside class="panel">
+          <h2>Inputs</h2>
+          <div class="content">
+            <div class="sideform">
+              <div class="row">
+                <label>Map
+                  <input id="mapName" type="text" value="Ascent" />
+                </label>
+                <label>Agent
+                  <input id="agent" type="text" value="Sova" />
+                </label>
+              </div>
+              <div class="row">
+                <label>Econ
+                  <select id="econ">
+                    <option>full</option>
+                    <option>force</option>
+                    <option>eco</option>
+                  </select>
+                </label>
+                <label>Favorite Weapon
+                  <input id="favoriteWeapon" type="text" value="Vandal" />
+                </label>
+              </div>
+              <div class="row">
+                <label>K/D/A
+                  <input id="kda" type="text" value="16/14/3" />
+                </label>
+                <label>Abilities Used %
+                  <input id="abilitiesPct" type="number" value="55" />
+                </label>
+              </div>
+              <div class="row">
+                <label>First Duels Taken
+                  <input id="fdt" type="number" value="11" />
+                </label>
+                <label>First Duels Won
+                  <input id="fdw" type="number" value="4" />
+                </label>
+              </div>
+              <div class="row">
+                <label>Avg Time to Engage (ms)
+                  <input id="tte" type="number" value="23000" />
+                </label>
+                <label>Deaths While Entrying
+                  <input id="entryDeaths" type="number" value="6" />
+                </label>
+              </div>
+              <div class="row">
+                <label>Plants
+                  <input id="plants" type="number" value="3" />
+                </label>
+                <label>Defuses
+                  <input id="defuses" type="number" value="1" />
+                </label>
+              </div>
+              <div class="row">
+                <label>Rounds Played
+                  <input id="rounds" type="number" value="20" />
+                </label>
+              </div>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </main>
+
+    <script>
+      const $$ = (id) => document.getElementById(id);
+      const toast = $$('toast');
+      function showError(msg) { toast.textContent = msg || 'Network error.'; toast.style.display = 'block'; setTimeout(()=> toast.style.display='none', 3000); }
+
+      function renderMetrics(m) {
+        $$("metricWinRate").textContent = Math.round(m.win_rate * 100) + '%';
+        $$("metricKD").textContent = m.kd_ratio.toFixed(2);
+        $$("metricFDR").textContent = Math.round(m.first_duel_rate * 100) + '%';
+        $$("metricRank").textContent = m.rank;
+      }
+
+      function renderTips(tips) {
+        const ul = $$("tipsList");
+        ul.innerHTML = '';
+        tips.forEach(t => {
+          const li = document.createElement('li');
+          li.className = `advice-item priority-${t.priority}`;
+          li.textContent = t.message;
+          ul.appendChild(li);
+        });
+      }
+
+      function renderLoadout(txt) {
+        $$("loadoutText").textContent = txt;
+      }
+
+      function drawHeatmap(canvas, hotspots) {
+        const rect = canvas.getBoundingClientRect();
+        const w = canvas.width = rect.width;
+        const h = canvas.height = rect.height;
+        const ctx = canvas.getContext('2d');
+        ctx.clearRect(0,0,w,h);
+        hotspots.forEach(hs => {
+          const x = hs.x * w;
+          const y = hs.y * h;
+          const r = 40 * (0.5 + hs.intensity);
+          const g = ctx.createRadialGradient(x, y, 0, x, y, r);
+          g.addColorStop(0, 'rgba(236,72,153,0.8)');
+          g.addColorStop(1, 'rgba(236,72,153,0)');
+          ctx.fillStyle = g;
+          ctx.beginPath();
+          ctx.arc(x, y, r, 0, Math.PI * 2);
+          ctx.fill();
+        });
+      }
+
+      async function loadHeatmap() {
+        try {
+          const res = await fetch('/heatmap/demo');
+          if (!res.ok) throw new Error('heatmap failed');
+          const data = await res.json();
+          drawHeatmap($$('heatmapCanvas'), data.hotspots || []);
+        } catch (e) {
+          showError('Failed to load heatmap');
+        }
+      }
+
+      async function loadMetrics() {
+        try {
+          const res = await fetch('/metrics/demo');
+          if (!res.ok) throw new Error('metrics failed');
+          renderMetrics(await res.json());
+        } catch (e) {
+          showError('Failed to load metrics');
+        }
+      }
+
+      function payloadFromInputs() {
+        return {
+          map_name: $$("mapName").value,
+          agent: $$("agent").value,
+          econ: $$("econ").value,
+          kda: $$("kda").value,
+          first_duels_taken: Number($$("fdt").value),
+          first_duels_won: Number($$("fdw").value),
+          abilities_used_pct: Number($$("abilitiesPct").value),
+          plants: Number($$("plants").value),
+          defuses: Number($$("defuses").value),
+          avg_time_to_engage_ms: Number($$("tte").value),
+          deaths_while_entrying: Number($$("entryDeaths").value),
+          favorite_weapon: $$("favoriteWeapon").value,
+          rounds_played: Number($$("rounds").value),
+          personality: $$("personalitySelect").value,
+        };
+      }
+
+      async function onGetAdvice() {
+        const btn = $$("getAdviceBtn");
+        btn.disabled = true;
+        try {
+          const res = await fetch('/coach', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(payloadFromInputs())
+          });
+          if (!res.ok) throw new Error('coach failed');
+          const data = await res.json();
+          renderTips(data.tips || []);
+          renderLoadout(data.loadout_reco || '');
+          renderMetrics(data.metrics || {});
+        } catch (e) {
+          showError('Failed to fetch advice');
+        } finally { btn.disabled = false; }
+      }
+
+      document.addEventListener('DOMContentLoaded', () => {
+        loadMetrics();
+        loadHeatmap();
+        $$("getAdviceBtn").addEventListener('click', onGetAdvice);
+        // Serve UI for browsers; tests will request JSON at '/' via Accept header.
+        fetch('/', { headers: { 'Accept': 'application/json' } }).catch(() => {});
+      });
+    </script>
+  </body>
+  </html>
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Valorant Coach MVP</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <style>
+    body{font-family:system-ui, Arial;max-width:800px;margin:24px auto;padding:0 16px}
+    .card{border:1px solid #ddd;border-radius:12px;padding:16px;margin:12px 0}
+    .tips li{margin:6px 0}
+    label{display:block;margin:8px 0 4px}
+    input{width:100%;padding:8px}
+    button{padding:10px 14px;border-radius:10px;border:1px solid #ccc;cursor:pointer}
+  </style>
+</head>
+<body>
+  <h1>Valorant Spectator Ghost — Functional MVP</h1>
+  <div class="card">
+    <p>Fill a few fields and get instant coaching tips.</p>
+    <div>
+      <label>Map</label><input id="map" value="Ascent">
+      <label>Agent</label><input id="agent" value="Jett">
+      <label>Econ</label><input id="econ" type="number" value="3900">
+      <label>KDA (k/d/a)</label><input id="kda" value="18/14/3">
+      <label>First Duels Taken</label><input id="fdt" type="number" value="6">
+      <label>First Duels Won</label><input id="fdw" type="number" value="2">
+      <label>Abilities Used %</label><input id="abilities" type="number" value="45">
+      <label>Plants</label><input id="plants" type="number" value="1">
+      <label>Defuses</label><input id="defuses" type="number" value="0">
+      <label>Avg Time to Engage (ms)</label><input id="tte" type="number" value="2300">
+      <label>Deaths While Entrying</label><input id="dwe" type="number" value="9">
+      <label>Favorite Weapon</label><input id="weapon" value="Vandal">
+      <label>Rounds Played</label><input id="rounds" type="number" value="20">
+    </div>
+    <p><button onclick="run()">Get Advice</button></p>
+  </div>
+
+  <div id="out"></div>
+
+  <script>
+    async function run(){
+      const payload = {
+        map_name: map.value, agent: agent.value, econ: +econ.value, kda: kda.value,
+        first_duels_taken: +fdt.value, first_duels_won: +fdw.value, abilities_used_pct: +abilities.value,
+        plants: +plants.value, defuses: +defuses.value, avg_time_to_engage_ms: +tte.value,
+        deaths_while_entrying: +dwe.value, favorite_weapon: weapon.value, rounds_played: +rounds.value
+      };
+      const res = await fetch("/coach",{method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify(payload)});
+      const data = await res.json();
+      out.innerHTML = `
+        <div class="card">
+          <h2>Summary</h2>
+          <p>${data.summary}</p>
+          <h3>Loadout</h3>
+          <p>${data.loadout_reco||"—"}</p>
+          <h3>Tips</h3>
+          <ul class="tips">${data.tips.map(t=>`<li><b>[${t.priority}]</b> ${t.message}</li>`).join("")}</ul>
+        </div>`;
+    }
+  </script>
+</body>
+</html>

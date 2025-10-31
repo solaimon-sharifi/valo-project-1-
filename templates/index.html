@@ -3,90 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Web Search - Enterprise Demo</title>
+    <title>Valo Spectator Ghost - Demo</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>🔍 AI Web Search</h1>
-            <p class="subtitle">Powered by OpenAI - Enterprise Demo</p>
+            <h1>🎮 Valo Spectator Ghost</h1>
+            <p class="subtitle">A demo UI for spectator-style playbacks and overlays</p>
             <div style="margin-top: 15px;">
                 <a href="/spectator-ghost" style="color: #10a37f; text-decoration: none; font-weight: 600; border: 2px solid #10a37f; padding: 10px 20px; border-radius: 8px; display: inline-block; transition: all 0.3s;">
-                    🎮 View AI Spectator Ghost Concept →
+                    🔍 View Spectator Ghost Demo →
                 </a>
             </div>
         </header>
 
         <main>
-            <div class="search-box">
-                <form id="searchForm">
-                    <div class="input-group">
-                        <input 
-                            type="text" 
-                            id="query" 
-                            name="query" 
-                            placeholder="Ask me anything... (e.g., 'What are the latest trends in AI?')"
-                            autocomplete="off"
-                            required
-                        >
-                        <button type="submit" id="searchBtn">
-                            <span class="btn-text">Search</span>
-                            <span class="btn-loading" style="display: none;">Searching...</span>
-                        </button>
-                    </div>
-                    
-                    <div class="advanced-options">
-                        <label for="domains">
-                            <span class="label-text">Domain Filter (optional):</span>
-                            <input 
-                                type="text" 
-                                id="domains" 
-                                name="domains" 
-                                placeholder="e.g., wikipedia.org, github.com"
-                                autocomplete="off"
-                            >
-                            <small>Separate multiple domains with commas</small>
-                        </label>
-                    </div>
-                </form>
-            </div>
-
-            <div id="error" class="error-message" style="display: none;"></div>
-
-            <div id="results" class="results-container" style="display: none;">
-                <div class="result-header">
-                    <h2>Search Results</h2>
-                    <div class="result-meta">
-                        <span id="queryDisplay"></span>
-                        <span id="citationCount" class="citation-badge"></span>
-                    </div>
-                </div>
-
-                <div class="answer-box">
-                    <h3>Answer</h3>
-                    <div id="answer" class="answer-content"></div>
-                </div>
-
-                <div id="citationsContainer" class="citations-box" style="display: none;">
-                    <h3>Sources & Citations</h3>
-                    <div id="citations" class="citations-list"></div>
-                </div>
-            </div>
-
-            <div class="examples">
-                <h3>Try these example queries:</h3>
-                <div class="example-buttons">
-                    <button class="example-btn" data-query="What are the latest developments in artificial intelligence?">Latest AI Developments</button>
-                    <button class="example-btn" data-query="How does machine learning work?">How ML Works</button>
-                    <button class="example-btn" data-query="What is quantum computing?">Quantum Computing</button>
-                    <button class="example-btn" data-query="Best practices for software development">Software Best Practices</button>
-                </div>
-            </div>
-        </main>
+            <section class="intro">
+                <p>This project contains a small demo UI for a Valorant-inspired spectator experience. The original AI web-search features have been removed from the public UI — the spectator demo can run independently and does not require any API keys.</p>
+                <p>Use the Spectator Ghost link above to open the demo page, or run the app locally and visit <code>/spectator-ghost</code>.</p>
+            </section>
 
         <footer>
-            <p>Built with <a href="https://openai.com" target="_blank">OpenAI</a> • Enterprise AI Demo 2025</p>
+            <p>Valo Spectator Ghost • Demo 2025</p>
         </footer>
     </div>
 
