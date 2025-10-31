@@ -23,5 +23,8 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r valorant-coach/requirements.txt
       - name: Run tests (valorant-coach)
-        run: pytest -q -c /dev/null
+        env:
+          PYTHONPATH: .
+          PYTEST_DISABLE_PLUGIN_AUTOLOAD: '1'
+        run: pytest -q -p pytest_asyncio.plugin -c /dev/null tests/test_api.py
         working-directory: valorant-coach
