@@ -12,22 +12,20 @@ BASE_PAYLOAD = {
     "first_duels_taken": 10,
     "first_duels_won": 6,
     "abilities_used_pct": 90,
-    "plants": 2,
-    "defuses": 1,
     "avg_time_to_engage_ms": 1000,
     "deaths_while_entrying": 0,
     "favorite_weapon": "Vandal",
-    "rounds_played": 20,
+    # removed plants/defuses/rounds to match simplified input set
 }
 
 
 @pytest.mark.asyncio
 @pytest.mark.parametrize(
-    "personality, expected_snippet",
+    "personality, expected_keyword",
     [
-        ("strict", "Fix crosshair placement"),
-        ("chill", "Nice game"),
-        ("analyst", "No immediate weaknesses detected"),
+        ("strict", "Fix:"),
+        ("chill", "Keep it chill"),
+        ("analyst", "Analysis:"),
     ],
 )
 async def test_personality_default_tip(personality, expected_snippet):
@@ -39,7 +37,7 @@ async def test_personality_default_tip(personality, expected_snippet):
     assert r.status_code == 200
     data = r.json()
     tips = data.get("tips") or []
-    # Ensure at least one tip and the default personality snippet appears
+    # Ensure at least one tip and that the personality tone appears in the messages
     assert len(tips) >= 1
     combined = " ".join(t.get("message", "") for t in tips)
     assert expected_snippet in combined

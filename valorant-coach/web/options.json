@@ -1,0 +1,17 @@
+{
+  "maps": ["Ascent", "Bind", "Breeze", "Icebox", "Split", "Fracture", "Pearl", "Haven"],
+  "agents": {
+    "Duelists": ["Jett", "Raze", "Reyna", "Phoenix", "Yoru"],
+    "Sentinels": ["Sage", "Killjoy", "Cypher"],
+    "Initiators": ["Sova", "Skye", "Breach", "KAY/O", "Fade"],
+    "Controllers": ["Omen", "Brimstone", "Viper", "Astra"]
+  },
+  "weapons": {
+    "Pistols": ["Classic", "Ghost", "Sheriff"],
+    "SMGs": ["Stinger", "Spectre"],
+    "Shotguns": ["Shorty", "Bucky", "Judge"],
+    "Rifles": ["Vandal", "Phantom", "Guardian", "Bulldog"],
+    "Snipers": ["Marshal", "Operator"],
+    "LMGs/ARs": ["Ares", "Odin"]
+  }
+}

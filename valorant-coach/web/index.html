@@ -89,7 +89,7 @@
             <div style="height: 16px"></div>
 
             <div class="mapframe">
-              <div class="label">Heatmap — Ascent (demo)</div>
+              <div class="label" id="heatmapLabel">Heatmap — Ascent (demo)</div>
               <canvas id="heatmapCanvas"></canvas>
             </div>
 
@@ -109,10 +109,10 @@
             <div class="sideform">
               <div class="row">
                 <label>Map
-                  <input id="mapName" type="text" value="Ascent" />
+                  <select id="mapName"><option>Loading...</option></select>
                 </label>
                 <label>Agent
-                  <input id="agent" type="text" value="Sova" />
+                  <select id="agent"><option>Loading...</option></select>
                 </label>
               </div>
               <div class="row">
@@ -124,7 +124,7 @@
                   </select>
                 </label>
                 <label>Favorite Weapon
-                  <input id="favoriteWeapon" type="text" value="Vandal" />
+                  <select id="favoriteWeapon"><option>Loading...</option></select>
                 </label>
               </div>
               <div class="row">
@@ -151,19 +151,7 @@
                   <input id="entryDeaths" type="number" value="6" />
                 </label>
               </div>
-              <div class="row">
-                <label>Plants
-                  <input id="plants" type="number" value="3" />
-                </label>
-                <label>Defuses
-                  <input id="defuses" type="number" value="1" />
-                </label>
-              </div>
-              <div class="row">
-                <label>Rounds Played
-                  <input id="rounds" type="number" value="20" />
-                </label>
-              </div>
+              <!-- Removed less-actionable inputs (plants, defuses, rounds) to simplify the form -->
             </div>
           </div>
         </aside>
@@ -217,7 +205,8 @@
 
       async function loadHeatmap() {
         try {
-          const res = await fetch('/heatmap/demo');
+          const map = $$('mapName').value || 'Ascent';
+          const res = await fetch('/heatmap/demo?map=' + encodeURIComponent(map));
           if (!res.ok) throw new Error('heatmap failed');
           const data = await res.json();
           drawHeatmap($$('heatmapCanvas'), data.hotspots || []);
@@ -245,12 +234,10 @@
           first_duels_taken: Number($$('fdt').value),
           first_duels_won: Number($$('fdw').value),
           abilities_used_pct: Number($$('abilitiesPct').value),
-          plants: Number($$('plants').value),
-          defuses: Number($$('defuses').value),
           avg_time_to_engage_ms: Number($$('tte').value),
           deaths_while_entrying: Number($$('entryDeaths').value),
           favorite_weapon: $$('favoriteWeapon').value,
-          rounds_played: Number($$('rounds').value),
+          // rounds_played removed to simplify input set
           personality: $$('personalitySelect').value,
         };
       }
@@ -276,7 +263,49 @@
 
       document.addEventListener('DOMContentLoaded', () => {
         loadMetrics();
-        loadHeatmap();
+        // Load options (maps / agents / weapons) from a central JSON file and populate selects
+        async function loadOptions() {
+          try {
+            const res = await fetch('/web/options.json');
+            if (!res.ok) throw new Error('options load failed');
+            const opts = await res.json();
+
+            const mapSel = $$('mapName');
+            mapSel.innerHTML = '';
+            (opts.maps || []).forEach(m => {
+              const o = document.createElement('option'); o.textContent = m; o.value = m; mapSel.appendChild(o);
+            });
+
+            const agentSel = $$('agent');
+            agentSel.innerHTML = '';
+            const agents = opts.agents || {};
+            Object.keys(agents).forEach(group => {
+              const og = document.createElement('optgroup'); og.label = group;
+              (agents[group] || []).forEach(a => { const o = document.createElement('option'); o.textContent = a; o.value = a; og.appendChild(o); });
+              agentSel.appendChild(og);
+            });
+
+            const wSel = $$('favoriteWeapon');
+            wSel.innerHTML = '';
+            const weapons = opts.weapons || {};
+            Object.keys(weapons).forEach(group => {
+              const og = document.createElement('optgroup'); og.label = group;
+              (weapons[group] || []).forEach(w => { const o = document.createElement('option'); o.textContent = w; o.value = w; og.appendChild(o); });
+              wSel.appendChild(og);
+            });
+
+            // set initial heatmap label and load
+            $$('heatmapLabel').textContent = 'Heatmap — ' + $$('mapName').value + ' (demo)';
+            loadHeatmap();
+          } catch (e) {
+            // fallback to current hardcoded/default values in case options.json can't be fetched
+            $$('heatmapLabel').textContent = 'Heatmap — ' + $$('mapName').value + ' (demo)';
+            loadHeatmap();
+          }
+        }
+
+        loadOptions();
+        $$('mapName').addEventListener('change', () => { $$('heatmapLabel').textContent = 'Heatmap — ' + $$('mapName').value + ' (demo)'; loadHeatmap(); });
         $$('getAdviceBtn').addEventListener('click', onGetAdvice);
         // Warm up API for tests (they'll request JSON with Accept header)
         fetch('/', { headers: { 'Accept': 'application/json' } }).catch(() => {});
