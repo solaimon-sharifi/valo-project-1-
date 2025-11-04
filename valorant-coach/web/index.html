@@ -176,39 +176,37 @@
       function showError(msg) { toast.textContent = msg || 'Network error.'; toast.style.display = 'block'; setTimeout(()=> toast.style.display='none', 3000); }
 
       function renderMetrics(m) {
-        $$("metricWinRate").textContent = Math.round(m.win_rate * 100) + '%';
-        $$("metricKD").textContent = m.kd_ratio.toFixed(2);
-        $$("metricFDR").textContent = Math.round(m.first_duel_rate * 100) + '%';
-        $$("metricRank").textContent = m.rank;
+        $$('metricWinRate').textContent = m && typeof m.win_rate === 'number' ? Math.round(m.win_rate * 100) + '%' : '—';
+        $$('metricKD').textContent = m && typeof m.kd_ratio === 'number' ? m.kd_ratio.toFixed(2) : '—';
+        $$('metricFDR').textContent = m && typeof m.first_duel_rate === 'number' ? Math.round(m.first_duel_rate * 100) + '%' : '—';
+        $$('metricRank').textContent = m && m.rank ? m.rank : '—';
       }
 
       function renderTips(tips) {
-        const ul = $$("tipsList");
+        const ul = $$('tipsList');
         ul.innerHTML = '';
-        tips.forEach(t => {
+        (tips || []).forEach(t => {
           const li = document.createElement('li');
-          li.className = `advice-item priority-${t.priority}`;
-          li.textContent = t.message;
+          li.className = `advice-item priority-${t.priority || 'low'}`;
+          li.textContent = t.message || '';
           ul.appendChild(li);
         });
       }
 
-      function renderLoadout(txt) {
-        $$("loadoutText").textContent = txt;
-      }
+      function renderLoadout(txt) { $$('loadoutText').textContent = txt || '—'; }
 
       function drawHeatmap(canvas, hotspots) {
         const rect = canvas.getBoundingClientRect();
-        const w = canvas.width = rect.width;
-        const h = canvas.height = rect.height;
+        const w = canvas.width = Math.max(1, rect.width);
+        const h = canvas.height = Math.max(1, rect.height);
         const ctx = canvas.getContext('2d');
         ctx.clearRect(0,0,w,h);
-        hotspots.forEach(hs => {
-          const x = hs.x * w;
-          const y = hs.y * h;
-          const r = 40 * (0.5 + hs.intensity);
+        (hotspots || []).forEach(hs => {
+          const x = (hs.x || 0) * w;
+          const y = (hs.y || 0) * h;
+          const r = 30 * (0.8 + (hs.intensity || 0));
           const g = ctx.createRadialGradient(x, y, 0, x, y, r);
-          g.addColorStop(0, 'rgba(236,72,153,0.8)');
+          g.addColorStop(0, 'rgba(236,72,153,0.9)');
           g.addColorStop(1, 'rgba(236,72,153,0)');
           ctx.fillStyle = g;
           ctx.beginPath();
@@ -240,25 +238,25 @@
 
       function payloadFromInputs() {
         return {
-          map_name: $$("mapName").value,
-          agent: $$("agent").value,
-          econ: $$("econ").value,
-          kda: $$("kda").value,
-          first_duels_taken: Number($$("fdt").value),
-          first_duels_won: Number($$("fdw").value),
-          abilities_used_pct: Number($$("abilitiesPct").value),
-          plants: Number($$("plants").value),
-          defuses: Number($$("defuses").value),
-          avg_time_to_engage_ms: Number($$("tte").value),
-          deaths_while_entrying: Number($$("entryDeaths").value),
-          favorite_weapon: $$("favoriteWeapon").value,
-          rounds_played: Number($$("rounds").value),
-          personality: $$("personalitySelect").value,
+          map_name: $$('mapName').value,
+          agent: $$('agent').value,
+          econ: $$('econ').value,
+          kda: $$('kda').value,
+          first_duels_taken: Number($$('fdt').value),
+          first_duels_won: Number($$('fdw').value),
+          abilities_used_pct: Number($$('abilitiesPct').value),
+          plants: Number($$('plants').value),
+          defuses: Number($$('defuses').value),
+          avg_time_to_engage_ms: Number($$('tte').value),
+          deaths_while_entrying: Number($$('entryDeaths').value),
+          favorite_weapon: $$('favoriteWeapon').value,
+          rounds_played: Number($$('rounds').value),
+          personality: $$('personalitySelect').value,
         };
       }
 
       async function onGetAdvice() {
-        const btn = $$("getAdviceBtn");
+        const btn = $$('getAdviceBtn');
         btn.disabled = true;
         try {
           const res = await fetch('/coach', {
@@ -279,72 +277,10 @@
       document.addEventListener('DOMContentLoaded', () => {
         loadMetrics();
         loadHeatmap();
-        $$("getAdviceBtn").addEventListener('click', onGetAdvice);
-        // Serve UI for browsers; tests will request JSON at '/' via Accept header.
+        $$('getAdviceBtn').addEventListener('click', onGetAdvice);
+        // Warm up API for tests (they'll request JSON with Accept header)
         fetch('/', { headers: { 'Accept': 'application/json' } }).catch(() => {});
       });
     </script>
   </body>
   </html>
-<!doctype html>
-<html>
-<head>
-  <meta charset="utf-8" />
-  <title>Valorant Coach MVP</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <style>
-    body{font-family:system-ui, Arial;max-width:800px;margin:24px auto;padding:0 16px}
-    .card{border:1px solid #ddd;border-radius:12px;padding:16px;margin:12px 0}
-    .tips li{margin:6px 0}
-    label{display:block;margin:8px 0 4px}
-    input{width:100%;padding:8px}
-    button{padding:10px 14px;border-radius:10px;border:1px solid #ccc;cursor:pointer}
-  </style>
-</head>
-<body>
-  <h1>Valorant Spectator Ghost — Functional MVP</h1>
-  <div class="card">
-    <p>Fill a few fields and get instant coaching tips.</p>
-    <div>
-      <label>Map</label><input id="map" value="Ascent">
-      <label>Agent</label><input id="agent" value="Jett">
-      <label>Econ</label><input id="econ" type="number" value="3900">
-      <label>KDA (k/d/a)</label><input id="kda" value="18/14/3">
-      <label>First Duels Taken</label><input id="fdt" type="number" value="6">
-      <label>First Duels Won</label><input id="fdw" type="number" value="2">
-      <label>Abilities Used %</label><input id="abilities" type="number" value="45">
-      <label>Plants</label><input id="plants" type="number" value="1">
-      <label>Defuses</label><input id="defuses" type="number" value="0">
-      <label>Avg Time to Engage (ms)</label><input id="tte" type="number" value="2300">
-      <label>Deaths While Entrying</label><input id="dwe" type="number" value="9">
-      <label>Favorite Weapon</label><input id="weapon" value="Vandal">
-      <label>Rounds Played</label><input id="rounds" type="number" value="20">
-    </div>
-    <p><button onclick="run()">Get Advice</button></p>
-  </div>
-
-  <div id="out"></div>
-
-  <script>
-    async function run(){
-      const payload = {
-        map_name: map.value, agent: agent.value, econ: +econ.value, kda: kda.value,
-        first_duels_taken: +fdt.value, first_duels_won: +fdw.value, abilities_used_pct: +abilities.value,
-        plants: +plants.value, defuses: +defuses.value, avg_time_to_engage_ms: +tte.value,
-        deaths_while_entrying: +dwe.value, favorite_weapon: weapon.value, rounds_played: +rounds.value
-      };
-      const res = await fetch("/coach",{method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify(payload)});
-      const data = await res.json();
-      out.innerHTML = `
-        <div class="card">
-          <h2>Summary</h2>
-          <p>${data.summary}</p>
-          <h3>Loadout</h3>
-          <p>${data.loadout_reco||"—"}</p>
-          <h3>Tips</h3>
-          <ul class="tips">${data.tips.map(t=>`<li><b>[${t.priority}]</b> ${t.message}</li>`).join("")}</ul>
-        </div>`;
-    }
-  </script>
-</body>
-</html>

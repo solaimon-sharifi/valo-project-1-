@@ -15,7 +15,7 @@ WEB_DIR = ROOT / "web"
 
 app = FastAPI(title="Valorant Tactical Coach MVP")
 
-# CORS: allow everything for local MVP
+# Allow everything for local development MVP
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -24,13 +24,13 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Serve assets under /web; index will be served from GET "/" depending on Accept header
+# Mount static files under /web for asset access. The root route serves index.html
 app.mount("/web", StaticFiles(directory=str(WEB_DIR), html=True), name="web")
 
 
 @app.get("/")
 async def root(request: Request):
-    """Return {ok:true} for JSON clients, otherwise serve the UI."""
+    """Return JSON for API clients (Accept: application/json), otherwise serve the UI index.html."""
     accept = (request.headers.get("accept") or "").lower()
     if "application/json" in accept:
         return {"ok": True}
