@@ -80,7 +80,6 @@ class RoundStats(BaseModel):
     first_duels_taken: int = 0
     first_duels_won: int = 0
     abilities_used_pct: float = 0.0
-    avg_time_to_engage_ms: int = 0
     deaths_while_entrying: int = 0
     favorite_weapon: Weapon = Weapon.Vandal
     personality: str = "analyst"

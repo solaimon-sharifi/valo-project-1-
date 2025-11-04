@@ -12,7 +12,6 @@ BASE_PAYLOAD = {
     "first_duels_taken": 10,
     "first_duels_won": 6,
     "abilities_used_pct": 90,
-    "avg_time_to_engage_ms": 1000,
     "deaths_while_entrying": 0,
     "favorite_weapon": "Vandal",
     # removed plants/defuses/rounds to match simplified input set
@@ -28,7 +27,7 @@ BASE_PAYLOAD = {
         ("analyst", "Analysis:"),
     ],
 )
-async def test_personality_default_tip(personality, expected_snippet):
+async def test_personality_default_tip(personality, expected_keyword):
     transport = ASGITransport(app=app)
     payload = dict(BASE_PAYLOAD)
     payload["personality"] = personality
@@ -40,4 +39,4 @@ async def test_personality_default_tip(personality, expected_snippet):
     # Ensure at least one tip and that the personality tone appears in the messages
     assert len(tips) >= 1
     combined = " ".join(t.get("message", "") for t in tips)
-    assert expected_snippet in combined
+    assert expected_keyword in combined

@@ -25,7 +25,6 @@ async def test_coach_endpoint():
         "abilities_used_pct": 55,
         "plants": 2,
         "defuses": 1,
-        "avg_time_to_engage_ms": 23000,
         "deaths_while_entrying": 6,
         "favorite_weapon": "Vandal",
         "rounds_played": 20,

@@ -49,7 +49,6 @@ def generate_advice(stats: RoundStats):
     - abilities_used_pct < 60 => high priority utility tip
     - low first duel winrate + many entry deaths => high priority entry tip
     - kd < 1 => medium priority trade/positioning tip
-    - very slow avg_time_to_engage_ms => low priority tempo tip
 
     Returns: (summary, loadout_reco, tips:list[Advice], metrics:Metrics)
     """
@@ -96,16 +95,7 @@ def generate_advice(stats: RoundStats):
             )
         )
 
-    # Tempo / engagement speed
-    if stats.avg_time_to_engage_ms > 20000:
-        tips.append(
-            Advice(
-                priority="low",
-                message=(
-                    "Tempo: first contact is slow. Consider faster defaults or early pressure to create openings."
-                ),
-            )
-        )
+    # Tempo / engagement speed removed per config — not using avg time to engage
 
     loadout_reco = format_loadout_reco(stats.econ, stats.favorite_weapon)
 
@@ -201,9 +191,7 @@ def generate_advice(stats: RoundStats):
     if first_duel_rate < 0.45 and stats.deaths_while_entrying >= 3:
         tips.append(Advice(priority="high", message=("Entry discipline: avoid solo wide swings — use trades or request flashes before taking aggressive angles.")))
 
-    # Tempo / engagement speed
-    if stats.avg_time_to_engage_ms > 20000:
-        tips.append(Advice(priority="low", message=("Tempo is slow: try earlier information plays or quicker defaults to open up space.")))
+    # Tempo / engagement speed removed — not used per user request
 
     # Weapon-based advice (if favorite provided)
     fav = (stats.favorite_weapon or "").lower()
@@ -222,7 +210,6 @@ def generate_advice(stats: RoundStats):
         candidates.append((abs(stats.abilities_used_pct - 65) / 100.0, f"Abilities: {stats.abilities_used_pct}%"))
         candidates.append((abs(kd_ratio - 1.0), f"K/D ratio: {kd_ratio:.2f}"))
         candidates.append((abs(first_duel_rate - 0.5), f"First duel rate: {first_duel_rate:.2f}"))
-        candidates.append((abs(stats.avg_time_to_engage_ms - 10000) / 10000.0, f"Avg engage(ms): {stats.avg_time_to_engage_ms}"))
         candidates.sort(reverse=True, key=lambda x: x[0])
         insight = candidates[0][1]
         tips.append(Advice(priority="low", message=(f"Insight: {insight} — use this to prioritize practice for the next few rounds.")))
