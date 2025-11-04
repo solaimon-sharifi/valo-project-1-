@@ -120,6 +120,82 @@ def generate_advice(stats: RoundStats):
         rank=rank_from_metrics(kd_ratio, first_duel_rate),
     )
 
+    # Agent-specific advice (role-based heuristics)
+    agent = (stats.agent or "").lower()
+    role_map = {
+        # Duelists
+        "jett": "duelist",
+        "raze": "duelist",
+        "reyna": "duelist",
+        "jakal": "duelist",
+        # Sentinels
+        "sage": "sentinel",
+        "killjoy": "sentinel",
+        "cypher": "sentinel",
+        # Initiators
+        "sova": "initiator",
+        "skye": "initiator",
+        "breach": "initiator",
+        # Controllers
+        "omen": "controller",
+        "brimstone": "controller",
+        "viper": "controller",
+    }
+    role = role_map.get(agent)
+    if role == "duelist":
+        tips.append(Advice(priority="high", message=("Duelist role: create space and trade efficiently; avoid overextending alone.")))
+    elif role == "sentinel":
+        tips.append(Advice(priority="medium", message=("Sentinel: focus on post-plant positions, anchor sites, and use utility to deny info.")))
+    elif role == "initiator":
+        tips.append(Advice(priority="medium", message=("Initiator: use recon and flashes to enable entries; coordinate timings with duelists.")))
+    elif role == "controller":
+        tips.append(Advice(priority="medium", message=("Controller: plan smoke timing to cut rotations and support executes; hold angles after smoke.")))
+
+    # Weapon-based advice
+    fav = (stats.favorite_weapon or "").lower()
+    if any(s in fav for s in ("shorty", "bucky", "judge")):
+        tips.append(Advice(priority="high", message=("Shotgun note: favor close angles and tight corners; avoid long sightlines.")))
+    elif any(s in fav for s in ("stinger", "spectre")):
+        tips.append(Advice(priority="medium", message=("SMG economy: play aggressively in close ranges and use utility to isolate fights.")))
+    elif any(s in fav for s in ("vandal", "phantom", "guardian")):
+        # already had a generic weapon note earlier; add tiered advice
+        tips.append(Advice(priority="low", message=("Rifle play: prefer medium-long angles and controlled bursts; practice recoil discipline.")))
+
+    # Rank-based advice
+    rank = (metrics.rank or "").lower()
+    if rank in ("silver",):
+        tips.append(Advice(priority="low", message=("Focus on fundamentals: map callouts, crosshair placement, and consistent utility usage to climb ranks.")))
+    elif rank in ("gold", "platinum"):
+        tips.append(Advice(priority="medium", message=("Work on trade setups and round planning; optimize utility economy and default timings.")))
+    else:
+        # high ranks
+        tips.append(Advice(priority="low", message=("At higher ranks, refine multi-round strategies and leadership: adapt defaults and win conditions.")))
+
+    # K/D-based advice (aggressive vs conservative play)
+    if kd_ratio >= 1.8:
+        tips.append(Advice(priority="low", message=("Strong K/D: leverage your impact by creating space and supporting teammates; consider shot-calling.")))
+    elif kd_ratio < 0.8:
+        tips.append(Advice(priority="high", message=("Low KD: prioritize survival, trades, and playing for utility rather than solo peaks.")))
+
+    # Always include a short personality-flavored reminder (helps UI consistency)
+    p = (stats.personality or "analyst").lower()
+    if p == "strict":
+        msg = (
+            "Communicate and hold angles. Fix crosshair placement and use utility when required — no excuses."
+        )
+    elif p == "chill":
+        msg = (
+            "Nice game — keep practicing fundamentals: callouts, smooth crosshair placement, and using utility to help teammates."
+        )
+    else:
+        # analyst or default
+        msg = (
+            "No immediate weaknesses detected. Keep practicing fundamentals: communicate with teammates, "
+            "maintain crosshair placement, and use utility proactively to secure map control."
+        )
+
+    tips.append(Advice(priority="low", message=msg))
+
     summary = (
         f"{stats.agent} on {stats.map_name}: KD {metrics.kd_ratio}, first duel win {int(metrics.first_duel_rate*100)}%. "
         f"Playstyle: {stats.personality}. Focus on utility and trading to improve round outcomes."
