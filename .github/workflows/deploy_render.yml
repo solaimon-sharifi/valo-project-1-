@@ -9,7 +9,8 @@ jobs:
   deploy:
     name: Deploy to Render
     runs-on: ubuntu-latest
-    if: github.repository_owner == 'solaimon-sharifi' || always()
+    # Only run this job if both Render secrets are configured for this repository
+    if: ${{ secrets.RENDER_SERVICE_ID && secrets.RENDER_API_KEY }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -20,10 +21,13 @@ jobs:
           sudo apt-get install -y jq
 
       - name: Validate secrets
+        env:
+          RENDER_SERVICE_ID: ${{ secrets.RENDER_SERVICE_ID }}
+          RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
         run: |
-          if [ -z "${{ secrets.RENDER_SERVICE_ID }}" ]; then
+          if [ -z "${RENDER_SERVICE_ID:-}" ]; then
             echo "Missing secret: RENDER_SERVICE_ID"; exit 1; fi
-          if [ -z "${{ secrets.RENDER_API_KEY }}" ]; then
+          if [ -z "${RENDER_API_KEY:-}" ]; then
             echo "Missing secret: RENDER_API_KEY"; exit 1; fi
 
       - name: Trigger Render deploy and wait for completion
