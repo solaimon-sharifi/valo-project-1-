@@ -1,8 +1,7 @@
-from httpx import ASGITransport, AsyncClient
 import pytest
+from httpx import ASGITransport, AsyncClient
 
 from src.app import app
-
 
 BASE_PAYLOAD = {
     "map_name": "Ascent",
