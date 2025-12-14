@@ -1,0 +1,14 @@
+{% extends "layout.html" %}
+
+{% block title %}Dashboard — Valorant Coach{% endblock %}
+
+{% block content %}
+  <div class="hero">
+    <h1>Dashboard</h1>
+    {% if user %}
+    <span>Welcome back, {{ user.username }} — your tactical coach awaits.</span>
+    {% endif %}
+  </div>
+  <p>Below is the Valorant Coach MVP—still running the same lightweight UI you love.</p>
+  <iframe class="dashboard-frame" src="/web/index.html"></iframe>
+{% endblock %}

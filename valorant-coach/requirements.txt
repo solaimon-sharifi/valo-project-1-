@@ -5,3 +5,7 @@ starlette
 pytest
 pytest-asyncio
 httpx
+jinja2>=3.1.2
+passlib[bcrypt]>=1.7.4
+python-jose[cryptography]>=3.5.0
+python-multipart>=0.0.6
