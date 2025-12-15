@@ -1,0 +1,15 @@
+{% extends "layout.html" %}
+
+{% block title %}Valorant Dashboard — Valorant Coach{% endblock %}
+
+{% block content %}
+  <div class="hero">
+    <h1>Valorant Dashboard</h1>
+    <span>Live telemetry and coach insights tuned specifically for Valorant matchups.</span>
+  </div>
+  <div class="auth-callout">
+    Stay signed in to keep these insights synced with the regular <a href="{{ url_for('dashboard_app') }}">Dashboard</a> experience and your saved runs.
+  </div>
+  <p>The iframe below mirrors the Valorant Tactical Coach UI while you browse the private dashboards.</p>
+  <iframe class="dashboard-frame" src="/web/index.html"></iframe>
+{% endblock %}

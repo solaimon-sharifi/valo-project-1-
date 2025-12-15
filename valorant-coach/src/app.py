@@ -3,7 +3,7 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any
 
-from fastapi import FastAPI, Form, Request, status
+from fastapi import APIRouter, FastAPI, Form, Request, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
@@ -39,6 +39,8 @@ app.add_middleware(
 # Mount static files for the Valorant UI assets
 app.mount("/web", StaticFiles(directory=str(WEB_DIR), html=True), name="web")
 templates = Jinja2Templates(directory=str(TEMPLATES_DIR))
+
+auth_router = APIRouter()
 
 
 @app.get("/")
@@ -149,15 +151,17 @@ def _template_context(request: Request) -> dict[str, Any]:
     }
 
 
-@app.get("/login")
+@auth_router.get("/login", name="login")
 async def login_form(request: Request):
     context = _template_context(request)
     context["message"] = None
     return templates.TemplateResponse("login.html", context)
 
 
-@app.post("/login")
-async def login_action(request: Request, username: str = Form(...), password: str = Form(...)):
+@auth_router.post("/login")
+async def login_action(
+    request: Request, username: str = Form(...), password: str = Form(...)
+):
     username = username.strip().lower()
     user = authenticate_user(username, password)
     if not user:
@@ -165,18 +169,20 @@ async def login_action(request: Request, username: str = Form(...), password: st
         context["message"] = "Invalid username or password."
         return templates.TemplateResponse("login.html", context)
     token = create_access_token({"sub": user.username})
-    return _cookie_response("/dashboard", token)
+    return _cookie_response("/dashboard/app", token)
 
 
-@app.get("/register")
+@auth_router.get("/register", name="register")
 async def register_form(request: Request):
     context = _template_context(request)
     context["message"] = None
     return templates.TemplateResponse("register.html", context)
 
 
-@app.post("/register")
-async def register_action(request: Request, username: str = Form(...), password: str = Form(...)):
+@auth_router.post("/register")
+async def register_action(
+    request: Request, username: str = Form(...), password: str = Form(...)
+):
     username = username.strip().lower()
     if not username or not password:
         context = _template_context(request)
@@ -189,21 +195,51 @@ async def register_action(request: Request, username: str = Form(...), password:
     user = UserInDB(username=username, hashed_password=hash_password(password))
     save_user(user)
     token = create_access_token({"sub": user.username})
-    return _cookie_response("/dashboard", token)
+    return _cookie_response("/dashboard/app", token)
 
 
-@app.get("/dashboard")
-async def dashboard(request: Request):
+@auth_router.get("/dashboard", name="dashboard", include_in_schema=False)
+async def dashboard_redirect() -> RedirectResponse:
+    return RedirectResponse("/dashboard/app", status_code=status.HTTP_302_FOUND)
+
+
+def _require_user(request: Request) -> UserInDB | RedirectResponse:
     user = _current_user_from_request(request)
     if not user:
         return RedirectResponse("/login", status_code=status.HTTP_303_SEE_OTHER)
+    return user
+
+
+@auth_router.get("/dashboard/app", name="dashboard_app")
+async def dashboard_app(request: Request):
+    user = _require_user(request)
+    if isinstance(user, RedirectResponse):
+        return user
     context = _template_context(request)
-    context.update({"title": "Dashboard"})
+    context.update(
+        {
+            "title": "Dashboard",
+            "hero_line": "Unlock the dashboards you just logged in for.",
+        }
+    )
     return templates.TemplateResponse("dashboard.html", context)
 
 
-@app.get("/logout")
+@auth_router.get("/valorant-dashboard", name="valorant_dashboard")
+async def valorant_dashboard(request: Request):
+    user = _require_user(request)
+    if isinstance(user, RedirectResponse):
+        return user
+    context = _template_context(request)
+    context.update({"title": "Valorant Dashboard"})
+    return templates.TemplateResponse("valorant_dashboard.html", context)
+
+
+@auth_router.get("/logout", name="logout")
 async def logout(_: Request):
     response = RedirectResponse("/", status_code=status.HTTP_303_SEE_OTHER)
     response.delete_cookie("access_token")
     return response
+
+
+app.include_router(auth_router)

@@ -5,9 +5,15 @@
 {% block content %}
   <div class="hero">
     <h1>Dashboard</h1>
-    {% if user %}
+    {% if hero_line %}
+    <span>{{ hero_line }}</span>
+    {% elif user %}
     <span>Welcome back, {{ user.username }} — your tactical coach awaits.</span>
     {% endif %}
+  </div>
+  <div class="auth-callout">
+    Use the embedded coach UI for saved runs and jump to
+    <a href="{{ url_for('valorant_dashboard') }}">Valorant Dashboard</a> for the full live telemetry.
   </div>
   <p>Below is the Valorant Coach MVP—still running the same lightweight UI you love.</p>
   <iframe class="dashboard-frame" src="/web/index.html"></iframe>

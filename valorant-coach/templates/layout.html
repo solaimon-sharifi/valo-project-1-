@@ -197,15 +197,16 @@
           <div class="brand-subtext">Authenticate once to keep the dashboard and adviser in sync.</div>
         </div>
         <div class="auth-links">
+          {% set path = request.url.path %}
           <nav>
-            {% set path = request.url.path %}
-            <a href="/" class="page-link{% if path == '/' %} active{% endif %}">Coach</a>
+            <a href="{{ url_for('root') }}" class="page-link{% if path == '/' %} active{% endif %}">Coach</a>
             {% if user %}
-            <a href="/dashboard" class="page-link{% if path.startswith('/dashboard') %} active{% endif %}">Dashboard</a>
-            <a href="/logout" class="page-link">Logout</a>
+            <a href="{{ url_for('dashboard_app') }}" class="page-link{% if path.startswith('/dashboard') %} active{% endif %}">Dashboard</a>
+            <a href="{{ url_for('valorant_dashboard') }}" class="page-link{% if path.startswith('/valorant-dashboard') %} active{% endif %}">Valorant Dashboard</a>
+            <a href="{{ url_for('logout') }}" class="page-link">Logout</a>
             {% else %}
-            <a href="/login" class="page-link{% if path == '/login' %} active{% endif %}">Login</a>
-            <a href="/register" class="page-link{% if path == '/register' %} active{% endif %}">Register</a>
+            <a href="{{ url_for('login') }}" class="page-link{% if path == '/login' %} active{% endif %}">Login</a>
+            <a href="{{ url_for('register') }}" class="page-link{% if path == '/register' %} active{% endif %}">Register</a>
             {% endif %}
           </nav>
           {% if user %}
