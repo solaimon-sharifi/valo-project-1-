@@ -172,7 +172,7 @@ def generate_advice(stats: RoundStats):
                 Advice(
                     priority="medium",
                     message=(
-                        "Sentinel: prioritize map control, crossfires, and utility "
+                        "Do prioritize map control, crossfires, and utility "
                         "to deny enemy info; hold angles post-plant."
                     ),
                 )

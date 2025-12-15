@@ -1,0 +1,27 @@
+version: "3.9"
+
+services:
+  valorant-coach:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file:
+      - .env.production
+    ports:
+      - "8002:8002"
+    depends_on:
+      - postgres
+    restart: unless-stopped
+  postgres:
+    image: postgres:15
+    restart: unless-stopped
+    env_file:
+      - .env.production
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+volumes:
+  postgres_data:
+*** End Patch

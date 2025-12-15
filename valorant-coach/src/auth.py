@@ -1,9 +1,7 @@
 from __future__ import annotations
 
-import json
 import os
 from datetime import datetime, timedelta
-from pathlib import Path
 from typing import Any
 
 from fastapi import HTTPException, status
@@ -11,32 +9,25 @@ from jose import JWTError, jwt
 from passlib.context import CryptContext
 from pydantic import BaseModel
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+from .db import get_session
+from .models_db import User as DBUser
+
+pwd_context = CryptContext(schemes=["argon2"], deprecated="auto")
 SECRET_KEY = os.getenv("VC_SECRET_KEY", "valorant-coach-secret")
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 60
 
-DATA_DIR = Path(__file__).resolve().parents[1] / "data"
-USERS_FILE = DATA_DIR / "users.json"
-DATA_DIR.mkdir(parents=True, exist_ok=True)
-
-if not USERS_FILE.exists():
-    USERS_FILE.write_text("{}")
-
-
-def _read_users() -> dict[str, Any]:
-    try:
-        return json.loads(USERS_FILE.read_text())
-    except json.JSONDecodeError:
-        return {}
-
-
-def _write_users(data: dict[str, Any]) -> None:
-    USERS_FILE.write_text(json.dumps(data, indent=2))
-
 
 class User(BaseModel):
     username: str
+    persona: str | None = None
+    favorite_map: str | None = None
+    favorite_weapon: str | None = None
+    favorite_agent: str | None = None
+    win_rate: float | None = None
+    kd_ratio: float | None = None
+    first_duel_rate: float | None = None
+    notes: str | None = None
 
 
 class UserInDB(User):
@@ -55,25 +46,52 @@ def hash_password(password: str) -> str:
     return pwd_context.hash(password)
 
 
+def _build_user_from_db(entry: DBUser) -> UserInDB:
+    return UserInDB(
+        username=entry.username,
+        hashed_password=entry.hashed_password,
+        persona=entry.persona,
+        favorite_map=entry.favorite_map,
+        favorite_weapon=entry.favorite_weapon,
+        favorite_agent=entry.favorite_agent,
+        win_rate=entry.win_rate,
+        kd_ratio=entry.kd_ratio,
+        first_duel_rate=entry.first_duel_rate,
+        notes=entry.notes,
+    )
+
+
 def get_user(username: str) -> UserInDB | None:
-    data = _read_users()
-    entry = data.get(username)
-    if not entry:
-        return None
-    return UserInDB(username=username, hashed_password=entry["hashed_password"])
+    session = get_session()
+    try:
+        entry = session.query(DBUser).filter(DBUser.username == username).first()
+        return _build_user_from_db(entry) if entry else None
+    finally:
+        session.close()
 
 
-def save_user(user: UserInDB) -> None:
-    data = _read_users()
-    data[user.username] = {"hashed_password": user.hashed_password}
-    _write_users(data)
+def save_user(user: UserInDB) -> DBUser:
+    session = get_session()
+    try:
+        db_user = DBUser(
+            username=user.username,
+            hashed_password=user.hashed_password,
+            persona=user.persona or "Analyst",
+            favorite_agent=user.favorite_agent or "Sova",
+            favorite_weapon=user.favorite_weapon or "Vandal",
+            favorite_map=user.favorite_map or "Ascent",
+        )
+        session.add(db_user)
+        session.commit()
+        session.refresh(db_user)
+        return db_user
+    finally:
+        session.close()
 
 
 def authenticate_user(username: str, password: str) -> UserInDB | None:
     user = get_user(username)
-    if not user:
-        return None
-    if not verify_password(password, user.hashed_password):
+    if not user or not verify_password(password, user.hashed_password):
         return None
     return user
 

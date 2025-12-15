@@ -1,8 +1,6 @@
 import pytest
 from httpx import ASGITransport, AsyncClient
 
-from src.app import app
-
 BASE_PAYLOAD = {
     "map_name": "Ascent",
     "agent": "Sova",
@@ -26,7 +24,7 @@ BASE_PAYLOAD = {
         ("analyst", "Analysis:"),
     ],
 )
-async def test_personality_default_tip(personality, expected_keyword):
+async def test_personality_default_tip(personality, expected_keyword, app):
     transport = ASGITransport(app=app)
     payload = dict(BASE_PAYLOAD)
     payload["personality"] = personality

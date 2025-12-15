@@ -10,6 +10,43 @@
   <div class="auth-callout">
     Stay signed in to keep these insights synced with the regular <a href="{{ url_for('dashboard_app') }}">Dashboard</a> experience and your saved runs.
   </div>
+  <div class="content-grid">
+    <section>
+      <h2>Persona Snapshot</h2>
+      <p class="muted">{{ user.username }} is assigned the {{ user.persona or 'Analyst' }} persona.</p>
+      <ul>
+        <li>Favorite Agent: <strong>{{ user.favorite_agent or 'Sova' }}</strong></li>
+        <li>Favorite Weapon: <strong>{{ user.favorite_weapon or 'Vandal' }}</strong></li>
+        <li>Favorite Map: <strong>{{ user.favorite_map or 'Ascent' }}</strong></li>
+      </ul>
+    </section>
+    <section>
+      <h2>Metrics</h2>
+      <div class="stats-grid">
+        <div>
+          <div class="muted">Win Rate</div>
+          <div class="metric">{{ (user.win_rate * 100) | round(1) if user.win_rate else '—' }}%</div>
+        </div>
+        <div>
+          <div class="muted">K/D Ratio</div>
+          <div class="metric">{{ user.kd_ratio | default('—') }}</div>
+        </div>
+        <div>
+          <div class="muted">First Duel</div>
+          <div class="metric">{{ (user.first_duel_rate * 100) | round(1) if user.first_duel_rate else '—' }}%</div>
+        </div>
+      </div>
+    </section>
+  </div>
+  <div class="valorant-heatmap">
+    <div class="muted">Heat-map placeholder driven by PostgreSQL data</div>
+    <div class="heatmap-grid">
+      {% for i in range(3) %}
+      <div class="heat-dot"></div>
+      {% endfor %}
+    </div>
+  </div>
   <p>The iframe below mirrors the Valorant Tactical Coach UI while you browse the private dashboards.</p>
   <iframe class="dashboard-frame" src="/web/index.html"></iframe>
+  <p class="muted">Need to revisit saved recommendations? <a href="{{ url_for('dashboard_app') }}">Back to Dashboard</a></p>
 {% endblock %}

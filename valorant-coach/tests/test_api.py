@@ -1,11 +1,9 @@
 import pytest
 from httpx import ASGITransport, AsyncClient
 
-from src.app import app
-
 
 @pytest.mark.asyncio
-async def test_health():
+async def test_health(app):
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://test") as ac:
         r = await ac.get("/", headers={"accept": "application/json"})
@@ -14,7 +12,7 @@ async def test_health():
 
 
 @pytest.mark.asyncio
-async def test_coach_endpoint():
+async def test_coach_endpoint(app):
     payload = {
         "map_name": "Ascent",
         "agent": "Sova",
@@ -41,7 +39,7 @@ async def test_coach_endpoint():
 
 
 @pytest.mark.asyncio
-async def test_metrics_and_heatmap():
+async def test_metrics_and_heatmap(app):
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://test") as ac:
         m = await ac.get("/metrics/demo")

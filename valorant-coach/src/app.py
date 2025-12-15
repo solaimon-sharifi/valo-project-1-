@@ -3,6 +3,7 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any
 
+from dotenv import load_dotenv
 from fastapi import APIRouter, FastAPI, Form, Request, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, RedirectResponse
@@ -20,10 +21,17 @@ from .auth import (
 )
 from .coach import generate_advice
 from .schemas import CoachResponse, HeatMap, Metrics, RoundStats
+from .db import configure_database, init_db
 
 ROOT = Path(__file__).resolve().parents[1]
+PROJECT_ROOT = ROOT.parent
 WEB_DIR = ROOT / "web"
 TEMPLATES_DIR = ROOT / "templates"
+
+load_dotenv(PROJECT_ROOT / ".env")
+load_dotenv(PROJECT_ROOT / ".env.production", override=False)
+configure_database()
+init_db()
 
 app = FastAPI(title="Valorant Tactical Coach MVP")
 
@@ -216,10 +224,19 @@ async def dashboard_app(request: Request):
     if isinstance(user, RedirectResponse):
         return user
     context = _template_context(request)
+    hero_line = (
+        user.notes
+        or "Authenticated data is pulled directly from the PostgreSQL dashboard store."
+    )
     context.update(
         {
             "title": "Dashboard",
-            "hero_line": "Unlock the dashboards you just logged in for.",
+            "hero_line": hero_line,
+            "welcome_stats": {
+                "win_rate": user.win_rate,
+                "kd_ratio": user.kd_ratio,
+                "first_duel": user.first_duel_rate,
+            },
         }
     )
     return templates.TemplateResponse("dashboard.html", context)
