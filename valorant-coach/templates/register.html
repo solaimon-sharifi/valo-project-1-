@@ -1,0 +1,27 @@
+{% extends "layout.html" %}
+
+{% block title %}Register — Valorant Coach{% endblock %}
+
+{% block content %}
+  <div class="hero">
+    <h1>Register</h1>
+    <span>Create an account to unlock the dashboard experience.</span>
+  </div>
+  <div class="auth-callout">
+    Choosing a username gives you access to the Dashboard for saved sessions and the Valorant Dashboard for live tactical insights.
+  </div>
+  <form method="post" action="/register">
+    <label>
+      Username
+      <input type="text" name="username" required autofocus />
+    </label>
+    <label>
+      Password
+      <input type="password" name="password" required />
+    </label>
+    <button type="submit">Create account</button>
+  </form>
+  {% if message %}
+  <div class="message">{{ message }}</div>
+  {% endif %}
+{% endblock %}

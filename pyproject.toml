@@ -2,12 +2,21 @@
 line-length = 88
 target-version = ['py311']
 skip-string-normalization = true
+extend-exclude = '(\.venv.*|venv.*|node_modules|\.git|\.mypy_cache|\.ruff_cache|\.pytest_cache)'
 
 [tool.isort]
 profile = "black"
 line_length = 88
 multi_line_output = 3
 include_trailing_comma = true
+skip = [
+	".venv",
+	".venv_root",
+	"venv",
+	"node_modules",
+	".git",
+	"__pycache__",
+]
 
 [tool.coverage.run]
 branch = true

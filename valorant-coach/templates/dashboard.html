@@ -1,0 +1,41 @@
+{% extends "layout.html" %}
+
+{% block title %}Dashboard — Valorant Coach{% endblock %}
+
+{% block content %}
+  <div class="hero">
+    <h1>Dashboard</h1>
+    {% if hero_line %}
+    <span>{{ hero_line }}</span>
+    {% elif user %}
+    <span>Welcome back, {{ user.username }} — your tactical coach awaits.</span>
+    {% endif %}
+  </div>
+  {% if user %}
+  <div class="stats-grid">
+    <div>
+      <div class="muted">Persona</div>
+      <div class="metric">{{ user.persona or "Analyst" }}</div>
+    </div>
+    <div>
+      <div class="muted">Favorite Agent</div>
+      <div class="metric">{{ user.favorite_agent or "Sova" }}</div>
+    </div>
+    <div>
+      <div class="muted">Win Rate</div>
+      <div class="metric">{{ (welcome_stats.win_rate * 100) | round(1) if welcome_stats and welcome_stats.win_rate else "—" }}%</div>
+    </div>
+    <div>
+      <div class="muted">K/D Ratio</div>
+      <div class="metric">{{ welcome_stats.kd_ratio | default("—") }}</div>
+    </div>
+  </div>
+  {% endif %}
+  <div class="auth-callout">
+    Use the embedded coach UI for saved runs and jump to
+    <a href="{{ url_for('valorant_dashboard') }}">Valorant Dashboard</a> for the full live telemetry.
+  </div>
+  <p class="muted">All metrics above are pulled from PostgreSQL ({{ user.notes }})</p>
+  <p>Below is the Valorant Coach MVP—still running the same lightweight UI you love.</p>
+  <iframe class="dashboard-frame" src="/web/index.html"></iframe>
+{% endblock %}

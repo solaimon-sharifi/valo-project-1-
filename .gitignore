@@ -105,6 +105,8 @@ celerybeat.pid
 # Environments
 .env
 .venv
+.venv_root/
+.venv_cl/
 env/
 venv/
 ENV/
@@ -148,6 +150,7 @@ cython_debug/
 *.tmp
 temp/
 tmp/
+.valorant-coach.pid
 
 # Reference materials (clone libraries here for AI to read)
 references/
